@@ -1,13 +1,13 @@
 # ca.slu.spdv
 
-FIXME: write description
+For now, no description provided.
 
 ## Usage
 
-FIXME: write
+For now, nothing for you to _use_.
 
 ## License
 
-Copyright (C) 2010 FIXME
+Copyright (C) 2010 SLU
 
 Distributed under the Eclipse Public License, the same as Clojure.
