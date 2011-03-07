@@ -1,4 +1,4 @@
-(ns ca.slu.spdv.new.slu-db
+(ns ca.slu.spdv.new.db-manip-boot
   (:use lobos.connectivity
         lobos.backends.h2
         :reload))

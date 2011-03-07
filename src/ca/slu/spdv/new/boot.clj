@@ -1,8 +1,7 @@
 (ns ca.slu.spdv.new.boot
-  (:refer-clojure :exclude [alter drop
-                            bigint boolean char double float time])
-  (:use (lobos core schema)
-        (ca.slu.spdv.new slu-db slu-schema)
+  (:use (ca.slu.spdv.new
+         db-manip-boot
+         db-schema-boot)
         :reload))
 
 (def db-credentials {:user "sa" :password ""})
@@ -22,15 +21,7 @@
 
 ;;; For now let's just use this thing globally like in the examples...
 
-(open-slu-db db-spec)
+(boot-db-schema db-spec)
 
-(create-schema      slu-schema)
-(set-default-schema slu-schema)
-
-
-
-(drop-schema        slu-schema)
-
-(close-slu-db)
-
+(unboot-db-schema)
 
