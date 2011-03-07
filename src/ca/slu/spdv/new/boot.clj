@@ -1,7 +1,9 @@
 (ns ca.slu.spdv.new.boot
-  (:use (ca.slu.spdv.new
-         db-manip-boot
-         db-schema-boot)
+  (:refer-clojure :exclude [distinct conj! disj! compile drop take sort])
+  (:use clojureql.core
+        (ca.slu.spdv.new
+         db-schema-boot
+         db-manip-boot)
         :reload))
 
 (def db-credentials {:user "sa" :password ""})
@@ -19,9 +21,13 @@
                :jndi-spec {:name "optional, a String or a javax.naming.Name"
                            :environment "optional, a java.util.Map"}}))
 
-;;; For now let's just use this thing globally like in the examples...
-
 (boot-db-schema db-spec)
+(boot-db-manip db-spec)
 
+(let [u (table db-spec "\"slu-global\".\"users\"")] ; for now, can't use keywords
+  @(conj! u {"\"name\"" "Daniel"})
+  )
+
+(unboot-db-manip)
 (unboot-db-schema)
 

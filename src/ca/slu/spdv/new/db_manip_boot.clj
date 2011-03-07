@@ -1,12 +1,10 @@
 (ns ca.slu.spdv.new.db-manip-boot
-  (:use lobos.connectivity
-        lobos.backends.h2
+  (:refer-clojure :exclude [distinct conj! disj! compile drop take sort])
+  (:use clojureql.core
         :reload))
 
-(defn open-slu-db
-  [db-spec]
-  (open-global db-spec))
+(defn boot-db-manip
+  [db-spec])
 
-(defn close-slu-db
-  []
-  (close-global))
+(defn unboot-db-manip
+  [])
