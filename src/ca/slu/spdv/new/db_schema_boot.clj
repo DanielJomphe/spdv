@@ -11,9 +11,11 @@
          db-schema-defs)
         :reload))
 
-(declare no-schema?)
-
 ;;; For now let's just use this thing globally like in the examples...
+
+(defn- no-schema?
+  []
+  true)
 
 (defn boot-db-schema
   [db-spec]
@@ -26,10 +28,6 @@
   []
   (drop-schema schema-slu) ; for now, let's drop it
   (close-global))
-
-(defn- no-schema?
-  []
-  true)
 
 (comment
   (drop-schema schema-slu)
