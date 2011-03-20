@@ -1,7 +1,7 @@
-(ns ca.slu.spdv.new.boot
+(ns spdv.new.boot
   (:refer-clojure :exclude [distinct conj! disj! compile drop take sort])
   (:use clojureql.core
-        (ca.slu.spdv.new
+        (spdv.new
          db-schema-boot
          db-manip-boot)
         :reload))

@@ -1,1 +1,1 @@
-(ns ca.slu.spdv.core.core-manager)
+(ns spdv.core.core-manager)

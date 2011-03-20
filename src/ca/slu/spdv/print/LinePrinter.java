@@ -1,4 +1,4 @@
-package ca.slu.spdv.print;
+package spdv.print;
 
 import java.awt.Color;
 import java.awt.Font;

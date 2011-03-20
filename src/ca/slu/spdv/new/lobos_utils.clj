@@ -1,4 +1,4 @@
-(ns ca.slu.spdv.new.lobos-utils
+(ns spdv.new.lobos-utils
   (:refer-clojure :exclude [alter compile drop
                             bigint boolean char double float time])
   (:use (lobos core schema)

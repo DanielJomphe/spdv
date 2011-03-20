@@ -1,5 +1,5 @@
-(ns ca.slu.spdv.test.core
-  (:use [ca.slu.spdv.core] :reload)
+(ns spdv.test.core
+  (:use [spdv.core] :reload)
   (:use [clojure.test]))
 
 (deftest replace-me ;; FIXME: write

@@ -1,4 +1,4 @@
-(ns ca.slu.spdv.new.db-schema-jdbc
+(ns spdv.new.db-schema-jdbc
   (:import (java.sql DriverManager)))
 
 (comment

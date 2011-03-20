@@ -1,1 +1,1 @@
-(ns ca.slu.spdv.print.print-server)
+(ns spdv.print.print-server)

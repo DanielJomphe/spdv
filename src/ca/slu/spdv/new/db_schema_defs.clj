@@ -1,8 +1,8 @@
-(ns ca.slu.spdv.new.db-schema-defs
+(ns spdv.new.db-schema-defs
   (:refer-clojure :exclude [alter compile drop
                             bigint boolean char double float time])
   (:use (lobos core schema)
-        ca.slu.spdv.new.lobos-utils
+        spdv.new.lobos-utils
         :reload))
 
 (defschema schema-slu :slu-global

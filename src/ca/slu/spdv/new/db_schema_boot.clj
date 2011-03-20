@@ -1,4 +1,4 @@
-(ns ca.slu.spdv.new.db-schema-boot
+(ns spdv.new.db-schema-boot
   (:refer-clojure :exclude [alter drop
                             bigint boolean char double float time])
   (:use (lobos
@@ -6,7 +6,7 @@
          connectivity
          schema)
         lobos.backends.h2
-        (ca.slu.spdv.new
+        (spdv.new
          db-manip-boot
          db-schema-defs)
         :reload))

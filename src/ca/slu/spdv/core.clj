@@ -1,1 +1,1 @@
-(ns ca.slu.spdv.core)
+(ns spdv.core)
