@@ -7,6 +7,8 @@
                  [lobos "0.7.0-SNAPSHOT"]
                  [clojureql "1.0.0"]]
   :dev-dependencies [[swank-clojure "1.2.1"]
+                     [lein-ring "0.4.0"]
                      [marginalia "0.5.0-alpha"]]
   :aot [apparatus.eval]
-  :main apparatus.main)
+  :main apparatus.main
+  :ring {:handler spdv.new.ring-handler/app})
