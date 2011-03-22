@@ -9,6 +9,8 @@
   :dev-dependencies [[swank-clojure "1.2.1"]
                      [lein-ring "0.4.0"]
                      [marginalia "0.5.0-alpha"]]
+  :disable-implicit-clean true
   :aot [apparatus.eval]
   :main apparatus.main
   :ring {:handler spdv.new.ring-handler/app})
+
