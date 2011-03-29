@@ -1,9 +1,7 @@
 (ns spdv.new.ring-handler
-  (:use (ring.handler dump)
-        (ring.middleware reload lint)
-        (ring.adapter jetty)
-        spdv.new.closure-templates
-        :reload))
+  (:use (spdv.new closure-templates)))
+
+;;; No more used. Was useful before using Compojure.
 
 (defn hello [req]
   {:status  200
@@ -17,23 +15,12 @@
 (defn wrap-everything [app]
   (fn [req]
     (let [orig-resp (app req)]
-      (assoc orig-resp :body (str "Wrapping Hello..." (:body orig-resp) "Wrapped Hello!")))))
+      (assoc orig-resp :body (str "Wrapping Hello..."
+                                  (:body orig-resp)
+                                  "Wrapped Hello!")))))
 
 (defn wrap-error [app]
   (fn [req]
     (if (= "/error" (:uri req))
       (throw (Exception. "Demonstrating ring.middleware.stacktrace"))
       (app req))))
-
-(def app
-  (-> handle-dump
-      wrap-lint
-      wrap-hello
-      wrap-lint
-      wrap-error
-      wrap-lint
-      wrap-everything
-      wrap-lint
-      (wrap-reload '(ring.handler.dump))
-      wrap-lint))
-
