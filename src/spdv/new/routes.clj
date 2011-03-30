@@ -29,13 +29,19 @@
 (def development?
   (not production?))
 
-(def *startup-instance-name* (let [mac  (MacAddress/get)
-                                   mbr  (get-local-member)
-                                   host (get-host mbr)
-                                   port (get-port mbr)]
-                               (str mac ":" host ":" port)))
+(let [mac  (MacAddress/get)
+      hmbr (get-local-member)
+      host (get-host hmbr)
+      port (get-port hmbr)]
+  (def instance-id
+    (str mac  ":" host ":" port))
+  (let [rmac (.split mac "-")
+        smac (str (first rmac) ".." (last rmac))
+        shst   (str ".." (last (.split host "[.]")))]
+    (def startup-instance-name
+      (str smac ":" shst ":" port))))
 
-(def instance-name (atom *startup-instance-name*
+(def instance-name (atom startup-instance-name
                          :validator #(not (empty? %))))
 
 (defroutes main-routes
