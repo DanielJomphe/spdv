@@ -19,4 +19,6 @@
   :disable-implicit-clean true
   ;;:aot [apparatus.eval]
   ;;:main apparatus.main
-  :ring {:handler spdv.new.routes/app})
+  :ring {:handler spdv.new.routes/app}
+  :javac-options {:destdir "classes/"}
+  :java-source-path "src/main/java")

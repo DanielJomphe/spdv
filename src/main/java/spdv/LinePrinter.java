@@ -1,4 +1,4 @@
-package spdv.print;
+package spdv;
 
 import java.awt.Color;
 import java.awt.Font;

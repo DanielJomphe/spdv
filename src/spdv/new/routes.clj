@@ -2,19 +2,23 @@
   (:use compojure.core
         spdv.new.middleware
         spdv.new.views
+        spdv.new.apparatus
         [hiccup.middleware :only (wrap-base-url)]
         ring.handler.dump
         [ring.middleware file file-info lint reload stacktrace]
         ring.util.response)
   (:require [compojure.route    :as c-route]
             [compojure.handler  :as c-handler]
-            [compojure.response :as c-response]))
+            [compojure.response :as c-response])
+  (:import spdv.MacAddress))
 
 (comment                                ;dev
   (do
     (use 'spdv.new.routes)
     (use 'ring.util.serve)
-    (serve app))
+    (serve app)
+    (use '[apparatus config cluster])
+    (instance (config)))
   (stop-server)
   (swank.core/break)
   )
@@ -25,7 +29,11 @@
 (def development?
   (not production?))
 
-(def *startup-instance-name* "Je viens de démarrer!")
+(def *startup-instance-name* (let [mac  (MacAddress/get)
+                                   mbr  (get-local-member)
+                                   host (get-host mbr)
+                                   port (get-port mbr)]
+                               (str mac ":" host ":" port)))
 
 (def instance-name (atom *startup-instance-name*
                          :validator #(not (empty? %))))
