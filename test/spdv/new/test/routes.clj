@@ -3,18 +3,18 @@
         spdv.new.routes))
 
 (deftest handle-input-valid
-  (let [resp (main-routes {:uri "/" :request-method :get})]
+  (let [resp (main-routes {:uri "/adder" :request-method :get})]
     (is (= 200 (:status resp)))
     (is (re-find #"add two numbers" (:body resp)))))
 
 (deftest handle-add-valid
-  (let [resp (main-routes {:uri "/" :request-method :post
+  (let [resp (main-routes {:uri "/adder" :request-method :post
                        :params {"a" "1" "b" "2"}})]
     (is (= 200 (:status resp)))
     (is (re-find #"1 \+ 2 = 3" (:body resp)))))
 
 (deftest handle-add-invalid
-  (let [resp (main-routes {:uri "/" :request-method :post
+  (let [resp (main-routes {:uri "/adder" :request-method :post
                        :params {"a" "foo" "b" "bar"}})]
     (is (= 200 (:status resp)))
     (is (re-find #"those are not both numbers" (:body resp)))))
