@@ -37,24 +37,24 @@
 ;;; alternatively, could map on ops & bindings & forms, with default
 ;;; ops being the usual crud : ["list" "put" "get" "delete"]
 ;;; or better?: doseq on [{:op "list" :bindings [] :forms ...}...]
-(defmacro defcrud                       ;stop supporting diff crudop-deffers?
+(defmacro defcrud                ;stop supporting diff crudop-deffers?
   [crudop-deffer ap-ds-getter name]
   `(do
-     (~crudop-deffer (~ap-ds-getter ~name) ~name "list"
-                     []          (.values pred-all))
      (~crudop-deffer (~ap-ds-getter ~name) ~name "put"
-                     [id# name#] (.put id# {:name name#}))
+                     [k# v#] (.put    k# v#))
+     (~crudop-deffer (~ap-ds-getter ~name) ~name "list"
+                     []      (.values pred-all))
      (~crudop-deffer (~ap-ds-getter ~name) ~name "get"
-                     [id#]       (.get id#))
+                     [k#]    (.get    k#))
      (~crudop-deffer (~ap-ds-getter ~name) ~name "delete"
-                     [id#]       (.remove id#))))
+                     [k#]    (.remove k#))))
 
 (comment
   (pprint (macroexpand-1 '(defcrud defcrudop get-map "services")))
   -->
   (do (...only showing the R in CRUD below...)
     (defcrudop (get-map "services") "services" "get"
-      [id#] (.get id#))))
+      [k#] (.get k#))))
 
 
 (defcrud defcrudop get-map "services")

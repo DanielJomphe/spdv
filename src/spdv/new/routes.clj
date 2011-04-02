@@ -42,10 +42,10 @@
 (defn instance-config []
   (services-get instance-id))
 
-(defn instance-config-set! [name]
-  (services-put instance-id name))
+(defn instance-config-set! [v]
+  (services-put instance-id v))
 
-(instance-config-set! (make-id))
+(instance-config-set! {:name (make-id)})
 
 (defroutes main-routes
   (context "/" []
@@ -53,7 +53,7 @@
                  (view-global-status-input ((instance-config) :name)))
            (POST "/" [cur-name new-name]
                  (when-not (.isEmpty (.trim new-name))
-                   (instance-config-set! (.trim new-name)))
+                   (instance-config-set! {:name (.trim new-name)}))
                  (view-global-status-input ((instance-config) :name))))
   (context "/adder" []
            (GET  "/" [] (view-input))
