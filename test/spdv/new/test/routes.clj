@@ -19,10 +19,11 @@
     (is (= 200 (:status resp)))
     (is (re-find #"those are not both numbers" (:body resp)))))
 
-(deftest handle-catchall
-  (let [resp (main-routes {:uri "/foo" :request-method :get})]
-    (is (= 302 (:status resp)))
-    (is (= "/" (get-in resp [:headers "Location"])))))
+(comment
+  (deftest handle-catchall
+    (let [resp (main-routes {:uri "/foo" :request-method :get})]
+      (is (= 302 (:status resp)))
+      (is (= "/" (get-in resp [:headers "Location"]))))))
 
 (deftest not-found-route
   (let [resp (main-routes {:uri "/foo" :request-method :get})]
