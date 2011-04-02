@@ -49,6 +49,9 @@
 
 (defroutes main-routes
   (context "/" []
+           (GET  "/" []
+                 (view-global-status ((instance-config) :name)
+                                     (services-list)))
            (GET  "/" [name]
                  (view-global-status ((instance-config) :name)))
            (POST "/" [cur-name new-name]
