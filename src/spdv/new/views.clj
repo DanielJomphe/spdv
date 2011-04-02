@@ -12,7 +12,7 @@
     (include-css "/css/style.css")]
    [:body content]))
 
-(defn view-global-status-input [name]
+(defn view-global-status [name]
   (main-layout
    [:h2 "État global du système"]
    [:form {:method "post" :action "/"}

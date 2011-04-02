@@ -49,12 +49,12 @@
 
 (defroutes main-routes
   (context "/" []
-           (GET  "/" []
-                 (view-global-status-input ((instance-config) :name)))
+           (GET  "/" [name]
+                 (view-global-status ((instance-config) :name)))
            (POST "/" [cur-name new-name]
                  (when-not (.isEmpty (.trim new-name))
                    (instance-config-set! {:name (.trim new-name)}))
-                 (view-global-status-input ((instance-config) :name))))
+                 (view-global-status ((instance-config) :name))))
   (context "/adder" []
            (GET  "/" [] (view-input))
            (POST "/" [a b]
