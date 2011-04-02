@@ -18,10 +18,9 @@
     (use 'ring.util.serve)
     (serve app)
     (use '[apparatus config cluster])
-    (instance (config)))
+    (def hinstance (instance (config))))
   (stop-server)
-  (swank.core/break)
-  )
+  (swank.core/break))
 
 (def production?
   (= "production" (get (System/getenv) "APP_ENV")))
@@ -29,30 +28,33 @@
 (def development?
   (not production?))
 
-(let [mac  (MacAddress/get)
-      hmbr (get-local-member)
-      host (get-host hmbr)
-      port (get-port hmbr)]
-  (def instance-id
-    (str mac  ":" host ":" port))
-  (let [rmac (.split mac "-")
-        smac (str (first rmac) ".." (last rmac))
-        shst   (str ".." (last (.split host "[.]")))]
-    (def startup-instance-name
-      (str smac ":" shst ":" port))))
+(defn make-id [& full]
+  (let [mac  (MacAddress/get)
+        lmbr (get-local-member)
+        host (get-host lmbr)
+        port (get-port lmbr)]
+    (str (if full mac  (last (.split mac "-")))    "["
+         (if full host (last (.split host "[.]"))) ":"
+         port                                      "]")))
 
-(def instance-name (atom startup-instance-name
-                         :validator #(not (empty? %))))
+(def instance-id (make-id :full))
+
+(defn instance-config []
+  (services-get instance-id))
+
+(defn instance-config-set! [name]
+  (services-put instance-id name))
+
+(instance-config-set! (make-id))
 
 (defroutes main-routes
   (context "/" []
            (GET  "/" []
-                 (view-global-status-input @instance-name))
+                 (view-global-status-input ((instance-config) :name)))
            (POST "/" [cur-name new-name]
-                 (try
-                   (reset! instance-name (.trim new-name))
-                   (catch Exception e))
-                 (view-global-status-input @instance-name)))
+                 (when-not (.isEmpty (.trim new-name))
+                   (instance-config-set! (.trim new-name)))
+                 (view-global-status-input ((instance-config) :name))))
   (context "/adder" []
            (GET  "/" [] (view-input))
            (POST "/" [a b]
