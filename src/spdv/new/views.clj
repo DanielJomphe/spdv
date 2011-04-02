@@ -19,7 +19,7 @@
      [:ul#all
       (for [x (sort-by #(str (% :name)) all)] ;unwrap from str if guaranteed
         [:li (x :name)])])
-   (form-to [:post "/"]
+   (form-to [:put "/"]
             (label        :new-name "Nom de cette instance : ")
             (text-field   :new-name name)
             (hidden-field :cur-name name)

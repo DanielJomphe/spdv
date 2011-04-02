@@ -54,7 +54,7 @@
                                      (services-list)))
            (GET  "/" [name]
                  (view-global-status ((instance-config) :name)))
-           (POST "/" [cur-name new-name]
+           (PUT "/" [cur-name new-name]
                  (when-not (.isEmpty (.trim new-name))
                    (instance-config-set! {:name (.trim new-name)}))
                  (view-global-status ((instance-config) :name))))
