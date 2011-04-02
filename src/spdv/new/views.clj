@@ -1,5 +1,5 @@
 (ns spdv.new.views
-  (:use [hiccup core page-helpers]
+  (:use [hiccup core form-helpers page-helpers]
         spdv.new.closure-templates)
   (:import [com.google.template.soy.data SoyMapData SoyListData]))
 
@@ -12,14 +12,18 @@
     (include-css "/css/style.css")]
    [:body content]))
 
-(defn view-global-status [name]
+(defn view-global-status [name & [all]]
   (main-layout
    [:h2 "État global du système"]
-   [:form {:method "post" :action "/"}
-    [:label {:for "new-name"} "Nom de cette instance : "]
-    [:input {:id  "new-name" :type "text" :name "new-name" :value name}]
-    [:input {:type "hidden" :name "cur-name" :value name}]
-    [:input.action {:type "submit" :value "Changer le nom"}]]))
+   (when all
+     [:ul#all
+      (for [x (sort-by #(str (% :name)) all)] ;unwrap from str if guaranteed
+        [:li (x :name)])])
+   (form-to [:post "/"]
+            (label        :new-name "Nom de cette instance : ")
+            (text-field   :new-name name)
+            (hidden-field :cur-name name)
+            (submit-button "Changer le nom"))))
 
 (defn view-input [& [a b]]
   (main-layout
