@@ -36,7 +36,8 @@
 (defn instance-config-set! [v]
   (instances-put instance-id v))
 
-(instance-config-set! {:name (make-id)})
+(instance-config-set! {:id   instance-id
+                       :name (make-id)})
 
 (comment                                ;dev
   (use 'spdv.new.routes)
@@ -62,9 +63,13 @@
            (GET  "/" [name]
                  (view-global-status (instances-data)))
            (PUT "/" [cur-name new-name]
-                 (when-not (.isEmpty (.trim new-name))
-                   (instance-config-set! {:name (.trim new-name)}))
-                 (view-global-status (instances-data))))
+                (when-not (or
+                           (= new-name cur-name)
+                           (.isEmpty (.trim new-name)))
+                  (instance-config-set!
+                   (merge (instance-config)
+                          {:name (.trim new-name)})))
+                (view-global-status (instances-data))))
   (context "/adder" []
            (GET  "/" [] (view-input))
            (POST "/" [a b]

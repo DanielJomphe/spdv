@@ -13,20 +13,19 @@
    [:body content]))
 
 (defn view-global-status [data]
-  (let [others (data :others)
-        self   (data :self)
-        name   (self :name)]
+  (let [os (data :others)
+        s  (data :self)]
     (main-layout
      [:h2 "État global du système"]
      [:ul#others
-      (for [o others]
-        [:li (o :name)])]
+      (for [o os]
+        [:li (o :id) (o :name)])]
      [:ul#self
       [:li
        (form-to [:put "/"]
-                (label        :new-name "Active :")
-                (text-field   :new-name name)
-                (hidden-field :cur-name name)
+                (label        :new-name (s :id))
+                (text-field   :new-name (s :name))
+                (hidden-field :cur-name (s :name))
                 (submit-button "Changer le nom"))]])))
 
 (defn view-input [& [a b]]
