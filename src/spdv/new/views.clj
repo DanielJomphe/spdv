@@ -6,7 +6,7 @@
 (defn main-layout [& content]
   (html5
    [:head
-    [:title "adder"]
+    [:title "SPDV"]
     (include-js  "/js/soyutils.js")
     (include-js  "/js/closure_templates_1.js")
     (include-css "/css/style.css")]

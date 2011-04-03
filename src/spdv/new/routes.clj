@@ -3,6 +3,7 @@
         spdv.new.middleware
         spdv.new.views
         spdv.new.apparatus
+        [apparatus config cluster]
         [hiccup.middleware :only (wrap-base-url)]
         ring.handler.dump
         [ring.middleware file file-info lint reload stacktrace]
@@ -12,21 +13,7 @@
             [compojure.response :as c-response])
   (:import spdv.MacAddress))
 
-(comment                                ;dev
-  (do
-    (use 'spdv.new.routes)
-    (use 'ring.util.serve)
-    (serve app)
-    (use '[apparatus config cluster])
-    (def hinstance (instance (config))))
-  (stop-server)
-  (swank.core/break))
-
-(def production?
-  (= "production" (get (System/getenv) "APP_ENV")))
-
-(def development?
-  (not production?))
+(defcrud defcrudop get-map "instances")
 
 (defn make-id [& full]
   (let [mac  (MacAddress/get)
@@ -37,7 +24,10 @@
          (if full host (last (.split host "[.]"))) ":"
          port                                      "]")))
 
-(def instance-id (make-id :full))
+(comment
+  (def hinstance (instance (config))))
+
+(def instance-id (make-id :full)) ;make-id starts an hz instance
 
 (defn instance-config []
   (services-get instance-id))
@@ -46,6 +36,16 @@
   (services-put instance-id v))
 
 (instance-config-set! {:name (make-id)})
+
+(comment                                ;dev
+  (use 'spdv.new.routes)
+  (use 'ring.util.serve)
+  (serve app)
+  (stop-server)
+  (swank.core/break)
+  (instances-put :2 {:name "name2"})
+  (do (doseq [s (instances-list)] (println s)) (println "=============="))
+  (-> (eval-any '(+ 1 1)) (.get)))
 
 (defroutes main-routes
   (context "/" []
@@ -75,6 +75,12 @@
   (comment
     (ANY "/*" [_]
          (redirect "/"))))
+
+(def production?
+  (= "production" (get (System/getenv) "APP_ENV")))
+
+(def development?
+  (not production?))
 
 (def app
   (-> (c-handler/site main-routes)

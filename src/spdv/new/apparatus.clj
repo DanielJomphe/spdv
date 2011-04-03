@@ -55,15 +55,3 @@
   (do (...only showing the R in CRUD below...)
     (defcrudop (get-map "services") "services" "get"
       [k#] (.get k#))))
-
-
-(defcrud defcrudop get-map "services")
-
-(comment
-  (services-put :1 "name1")
-  (services-put :2 "name2")
-  (services-put :3 "name3")
-  (services-put :4 "name4")
-  (do (doseq [s (services-list)] (println s)) (println "=============="))
-
-  (-> (eval-any '(+ 1 1)) (.get)))
