@@ -12,18 +12,22 @@
     (include-css "/css/style.css")]
    [:body content]))
 
-(defn view-global-status [name & [all]]
-  (main-layout
-   [:h2 "État global du système"]
-   (when all
-     [:ul#all
-      (for [x (sort-by #(str (% :name)) all)] ;unwrap from str if guaranteed
-        [:li (x :name)])])
-   (form-to [:put "/"]
-            (label        :new-name "Nom de cette instance : ")
-            (text-field   :new-name name)
-            (hidden-field :cur-name name)
-            (submit-button "Changer le nom"))))
+(defn view-global-status [data]
+  (let [others (data :others)
+        self   (data :self)
+        name   (self :name)]
+    (main-layout
+     [:h2 "État global du système"]
+     [:ul#others
+      (for [o others]
+        [:li (o :name)])]
+     [:ul#self
+      [:li
+       (form-to [:put "/"]
+                (label        :new-name "Active :")
+                (text-field   :new-name name)
+                (hidden-field :cur-name name)
+                (submit-button "Changer le nom"))]])))
 
 (defn view-input [& [a b]]
   (main-layout

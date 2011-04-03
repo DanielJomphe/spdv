@@ -30,10 +30,10 @@
 (def instance-id (make-id :full)) ;make-id starts an hz instance
 
 (defn instance-config []
-  (services-get instance-id))
+  (instances-get instance-id))
 
 (defn instance-config-set! [v]
-  (services-put instance-id v))
+  (instances-put instance-id v))
 
 (instance-config-set! {:name (make-id)})
 
@@ -47,17 +47,23 @@
   (do (doseq [s (instances-list)] (println s)) (println "=============="))
   (-> (eval-any '(+ 1 1)) (.get)))
 
+(defn instances-data []
+  (let [xs         (sort-by #(:name %) (instances-list))
+        name-discr #(= (:name %) ((instance-config) :name))]
+    {:self   (first
+              (filter name-discr xs))
+     :others  (filter #(not (name-discr %)) xs)}))
+
 (defroutes main-routes
   (context "/" []
            (GET  "/" []
-                 (view-global-status ((instance-config) :name)
-                                     (services-list)))
+                 (view-global-status (instances-data)))
            (GET  "/" [name]
-                 (view-global-status ((instance-config) :name)))
+                 (view-global-status (instances-data)))
            (PUT "/" [cur-name new-name]
                  (when-not (.isEmpty (.trim new-name))
                    (instance-config-set! {:name (.trim new-name)}))
-                 (view-global-status ((instance-config) :name))))
+                 (view-global-status (instances-data))))
   (context "/adder" []
            (GET  "/" [] (view-input))
            (POST "/" [a b]
