@@ -20,13 +20,14 @@
      [:ul#others
       (for [o os]
         [:li
-         (o :instance-id)
-         (o :member-host)
+         (o :instance-id) " "
+         (o :member-host) " "
          (o :member-name)])]
      [:ul#self
       [:li
        (form-to [:put "/"]
-                (label        :new-name (str (s :instance-id) (s :member-host)))
+                (label        :new-name
+                              (str (s :instance-id) " " (s :member-host) " "))
                 (text-field   :new-name (s :member-name))
                 (hidden-field :cur-name (s :member-name))
                 (submit-button "Changer le nom"))]])))
