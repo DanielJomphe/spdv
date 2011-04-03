@@ -1,9 +1,14 @@
 (ns spdv.new.apparatus
   (:use [apparatus config cluster])
-  (:import [com.hazelcast.core Hazelcast]
+  (:import [com.hazelcast.core  Hazelcast]
            [com.hazelcast.query Predicate]))
 
+(defn get-members []
+  "Has the side effect of starting an instance if none exists yet."
+  (-> (Hazelcast/getCluster) (.getMembers)))
+
 (defn get-local-member []
+  "Has the side effect of starting an instance if none exists yet."
   (-> (Hazelcast/getCluster) (.getLocalMember)))
 
 (defn get-host [member]

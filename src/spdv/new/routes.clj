@@ -15,19 +15,20 @@
 
 (defcrud defcrudop get-map "instances")
 
+(comment
+  (def instance-hz (instance (config))))
+
+(def cluster-local-member (get-local-member))
+
 (defn make-id [& full]
   (let [mac  (MacAddress/get)
-        lmbr (get-local-member)
-        host (get-host lmbr)
-        port (get-port lmbr)]
+        host (get-host cluster-local-member)
+        port (get-port cluster-local-member)]
     (str (if full mac  (last (.split mac "-")))    "["
          (if full host (last (.split host "[.]"))) ":"
          port                                      "]")))
 
-(comment
-  (def hinstance (instance (config))))
-
-(def instance-id (make-id :full)) ;make-id starts an hz instance
+(def instance-id (make-id :full))
 
 (defn instance-config []
   (instances-get instance-id))
