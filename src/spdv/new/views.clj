@@ -57,7 +57,6 @@
 
 (defn hello-server []
   (str "<h2>closure templates on the server side</h2>"
-       (.render tofu "spdv.templates.helloWorld" {} nil)
        (.render tofu-ns ".helloName"
                 (SoyMapData. {"name" "Daniel"}) nil)
        (.render tofu-ns ".helloName"
