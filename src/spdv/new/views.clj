@@ -17,12 +17,12 @@
         s  (data :self)]
     (main-layout
      [:h2 "État global du système"]
-     [:ul#others
+     [:instances#others
       (for [o os]
-        [:li
-         (o :instance-id) " "
-         (o :member-host) " "
-         (o :member-name)])]
+        (.render tofu "spdv.templates.statusElementOther"
+                 (SoyMapData. {"instanceId" (o :instance-id)
+                               "memberHost" (o :member-host)
+                               "memberName" (o :member-name)}) nil))]
      [:ul#self
       [:li
        (form-to [:put "/"]

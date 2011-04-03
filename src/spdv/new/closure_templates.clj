@@ -5,9 +5,9 @@
            [com.google.template.soy.data SoyMapData SoyListData]
            [com.google.template.soy.jssrc SoyJsSrcOptions]))
 
-(def soyfs   (->  (SoyFileSet$Builder.)
-                     (.add (File. "src/spdv/new/closure_templates.soy"))
-                     (.build)))
+(def soyfs   (-> (SoyFileSet$Builder.)
+                 (.add (File. "src/spdv/new/closure_templates.soy"))
+                 (.build)))
 (def tofu    (.compileToJavaObj soyfs))
 (def tofu-ns (.forNamespace tofu "spdv.templates"))
 

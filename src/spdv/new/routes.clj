@@ -121,6 +121,7 @@
       (wrap-file-info)
       (wrap-request-logging)
       (wrap-if development? wrap-reload '[spdv.new.middleware
+                                          spdv.new.closure-templates
                                           spdv.new.views])
       (wrap-bounce-favicon)
       (wrap-exception-logging)
