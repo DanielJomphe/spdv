@@ -17,20 +17,25 @@
         s  (data :self)]
     (main-layout
      [:h2 "État global du système"]
-     [:instances#others
+     [:instances
+      (.render tofu "spdv.templates.statusInstanceSelf"
+               (SoyMapData. {"instanceId" (s :instance-id)
+                             "memberHost" (s :member-host)
+                             "memberName" (s :member-name)}) nil)
       (for [o os]
-        (.render tofu "spdv.templates.statusElementOther"
+        (.render tofu "spdv.templates.statusInstanceOther"
                  (SoyMapData. {"instanceId" (o :instance-id)
                                "memberHost" (o :member-host)
-                               "memberName" (o :member-name)}) nil))]
-     [:ul#self
-      [:li
-       (form-to [:put "/"]
+                               "memberName" (o :member-name)}) nil))])))
+
+(comment ;for reference until I implement new forms hiccup-wise
+         (form-to [:put "/"]
                 (label        :new-name
-                              (str (s :instance-id) " " (s :member-host) " "))
+                              (str (s :instance-id) " "
+                                   (s :member-host) " "))
                 (text-field   :new-name (s :member-name))
                 (hidden-field :cur-name (s :member-name))
-                (submit-button "Changer le nom"))]])))
+                (submit-button "Changer le nom")))
 
 (defn view-input [& [a b]]
   (main-layout

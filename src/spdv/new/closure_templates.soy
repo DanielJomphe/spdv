@@ -1,18 +1,33 @@
 {namespace spdv.templates}
 
 /**
- * Displays a system element's status (for other elements).
+ * Displays an instance's status (for the current instance)
  * @param instanceId The id of the instance.
  * @param memberHost The host of the member.
  * @param memberName The name of the member.
  */
-{template .statusElementOther}
-<instance>{$instanceId} {$memberHost} {$memberName}</instance>
-{/template}
+{template .statusInstanceSelf}
+<instance class="self">
+  <form action="/" method="POST">
+    <input id="_method" name="_method" type="hidden" value="PUT">
+    <label for="new-name">{$instanceId} {$memberHost}</label>
+    <input  id="new-name" name="new-name" type="text"   value="{$memberName}">
+    <input  id="cur-name" name="cur-name" type="hidden" value="{$memberName}">
+    <input type="submit" value="Changer le nom"></form>
+</instance>
+{/template} 
 
 /**
- * <li><form action="/" method="POST"><input id="_method" name="_method" type="hidden" value="PUT"><label for="new-name">00-1B-63-AB-6A-86[192.168.1.100:5701] 192.168.1.100 </label><input id="new-name" name="new-name" type="text" value="asdf"><input id="cur-name" name="cur-name" type="hidden" value="asdf"><input type="submit" value="Changer le nom"></form></li>
+ * Displays an instance's status (for other instances).
+ * @param instanceId The id of the instance.
+ * @param memberHost The host of the member.
+ * @param memberName The name of the member.
  */
+{template .statusInstanceOther}
+<instance class="other">
+  {$instanceId} {$memberHost} {$memberName}
+</instance>
+{/template}
 
 /**
  * Says hello to the world.
