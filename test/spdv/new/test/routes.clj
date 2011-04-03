@@ -2,22 +2,32 @@
   (:use clojure.test
         spdv.new.routes))
 
-(deftest handle-input-valid
-  (let [resp (main-routes {:uri "/adder" :request-method :get})]
-    (is (= 200 (:status resp)))
-    (is (re-find #"add two numbers" (:body resp)))))
+(comment ;route that was used for the following tests
+    (context "/adder" []
+           (GET  "/" [] (view-input))
+           (POST "/" [a b]
+                 (try
+                   (let [[a b] (parse-input a b)]
+                     (view-output a b (+ a b)))
+                   (catch NumberFormatException e
+                     (view-input a b)))))
 
-(deftest handle-add-valid
-  (let [resp (main-routes {:uri "/adder" :request-method :post
-                       :params {"a" "1" "b" "2"}})]
-    (is (= 200 (:status resp)))
-    (is (re-find #"1 \+ 2 = 3" (:body resp)))))
+    (deftest handle-input-valid
+      (let [resp (main-routes {:uri "/adder" :request-method :get})]
+        (is (= 200 (:status resp)))
+        (is (re-find #"add two numbers" (:body resp)))))
 
-(deftest handle-add-invalid
-  (let [resp (main-routes {:uri "/adder" :request-method :post
-                       :params {"a" "foo" "b" "bar"}})]
-    (is (= 200 (:status resp)))
-    (is (re-find #"those are not both numbers" (:body resp)))))
+    (deftest handle-add-valid
+      (let [resp (main-routes {:uri "/adder" :request-method :post
+                               :params {"a" "1" "b" "2"}})]
+        (is (= 200 (:status resp)))
+        (is (re-find #"1 \+ 2 = 3" (:body resp)))))
+
+    (deftest handle-add-invalid
+      (let [resp (main-routes {:uri "/adder" :request-method :post
+                               :params {"a" "foo" "b" "bar"}})]
+        (is (= 200 (:status resp)))
+        (is (re-find #"those are not both numbers" (:body resp))))))
 
 (comment
   (deftest handle-catchall

@@ -37,24 +37,6 @@
                 (hidden-field :cur-name (s :member-name))
                 (submit-button "Changer le nom")))
 
-(defn view-input [& [a b]]
-  (main-layout
-   [:h2 "add two numbers"]
-   [:form {:method "post" :action "/adder"}
-    (if (and a b) [:p "those are not both numbers!"])
-    [:input.math {:type "text" :member-name "a" :value a}] [:span.math " + "]
-    [:input.math {:type "text" :member-name "b" :value b}] [:br]
-    [:input.action {:type "submit" :value "add"}]]))
-
-(defn view-output [a b sum]
-  (main-layout
-   [:h2 "two numbers added"]
-   [:p.math a " + " b " = " sum]
-   [:a.action {:href "/adder"} "add more numbers"]))
-
-(defn parse-input [a b]
-  [(Integer/parseInt a) (Integer/parseInt b)])
-
 (defn hello-server []
   (str "<h2>closure templates on the server side</h2>"
        (.render tofu-ns ".helloName"
@@ -74,3 +56,7 @@
          "document.write(spdv.templates.helloName({'name':'Daniel'}));"
          "document.write(spdv.templates.helloName({'name':'Daniel', 'greetingWord':'Bonjour'}));"
          "document.write(spdv.templates.helloNames({'name':'Daniel', 'additionalNames':['Bob', 'Cid', 'Lee']}));")]))
+
+;;; Deprecated learning stuff, but for now, let's keep some for the unit tests.
+(defn parse-input [a b]
+  [(Integer/parseInt a) (Integer/parseInt b)])

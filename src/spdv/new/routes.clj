@@ -84,14 +84,6 @@
                    (merge (instance-data)
                           {:member-name (.trim new-name)})))
                 (view-global-status (instances-data))))
-  (context "/adder" []
-           (GET  "/" [] (view-input))
-           (POST "/" [a b]
-                 (try
-                   (let [[a b] (parse-input a b)]
-                     (view-output a b (+ a b)))
-                   (catch NumberFormatException e
-                     (view-input a b)))))
   (context "/closure-server" []
            (GET "/" [] (hello-server)))
   (context "/closure-client" []

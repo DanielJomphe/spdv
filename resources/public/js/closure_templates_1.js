@@ -19,13 +19,6 @@ spdv.templates.statusInstanceOther = function(opt_data, opt_sb) {
 };
 
 
-spdv.templates.helloWorld = function(opt_data, opt_sb) {
-  var output = opt_sb || new soy.StringBuilder();
-  output.append('Hello world, from Closure Template!');
-  if (!opt_sb) return output.toString();
-};
-
-
 spdv.templates.helloName = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
   output.append((! opt_data.greetingWord) ? 'Hello ' + soy.$$escapeHtml(opt_data.name) + '!' : soy.$$escapeHtml(opt_data.greetingWord) + ' ' + soy.$$escapeHtml(opt_data.name) + '!');
@@ -37,13 +30,13 @@ spdv.templates.helloNames = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
   spdv.templates.helloName(opt_data, output);
   output.append('<br>');
-  var additionalNameList36 = opt_data.additionalNames;
-  var additionalNameListLen36 = additionalNameList36.length;
-  if (additionalNameListLen36 > 0) {
-    for (var additionalNameIndex36 = 0; additionalNameIndex36 < additionalNameListLen36; additionalNameIndex36++) {
-      var additionalNameData36 = additionalNameList36[additionalNameIndex36];
-      spdv.templates.helloName({name: additionalNameData36}, output);
-      output.append((! (additionalNameIndex36 == additionalNameListLen36 - 1)) ? '<br>' : '');
+  var additionalNameList34 = opt_data.additionalNames;
+  var additionalNameListLen34 = additionalNameList34.length;
+  if (additionalNameListLen34 > 0) {
+    for (var additionalNameIndex34 = 0; additionalNameIndex34 < additionalNameListLen34; additionalNameIndex34++) {
+      var additionalNameData34 = additionalNameList34[additionalNameIndex34];
+      spdv.templates.helloName({name: additionalNameData34}, output);
+      output.append((! (additionalNameIndex34 == additionalNameListLen34 - 1)) ? '<br>' : '');
     }
   } else {
     output.append('No additional people to greet.');
