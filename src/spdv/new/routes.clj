@@ -45,7 +45,7 @@
   (serve app)
   (stop-server)
   (swank.core/break)
-  (instances-put :2 {:name "name2"})
+  (instances-put :2 {:id "id2" :name "name2"})
   (do (doseq [s (instances-list)] (println s)) (println "=============="))
   (-> (eval-any '(+ 1 1)) (.get)))
 
