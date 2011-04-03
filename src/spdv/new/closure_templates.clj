@@ -15,5 +15,5 @@
 
 (dorun (let [files (.compileToJsSrc soyfs (SoyJsSrcOptions.) nil)]
          (for [i (range (.size files)) ]
-           (spit (str "resources/public/js/closure_templates_" (+ 1 i) ".js")
+           (spit (str "resources/public/js/generated/closure_templates_" (+ 1 i) ".js")
                  (nth files i)))))

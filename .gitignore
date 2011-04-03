@@ -7,3 +7,4 @@ classes
 \#*#
 .#*
 jdbc:h2:*
+generated/
