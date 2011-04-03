@@ -19,13 +19,16 @@
      [:h2 "État global du système"]
      [:ul#others
       (for [o os]
-        [:li (o :id) (o :name)])]
+        [:li
+         (o :instance-id)
+         (o :member-host)
+         (o :member-name)])]
      [:ul#self
       [:li
        (form-to [:put "/"]
-                (label        :new-name (s :id))
-                (text-field   :new-name (s :name))
-                (hidden-field :cur-name (s :name))
+                (label        :new-name (str (s :instance-id) (s :member-host)))
+                (text-field   :new-name (s :member-name))
+                (hidden-field :cur-name (s :member-name))
                 (submit-button "Changer le nom"))]])))
 
 (defn view-input [& [a b]]
@@ -33,8 +36,8 @@
    [:h2 "add two numbers"]
    [:form {:method "post" :action "/adder"}
     (if (and a b) [:p "those are not both numbers!"])
-    [:input.math {:type "text" :name "a" :value a}] [:span.math " + "]
-    [:input.math {:type "text" :name "b" :value b}] [:br]
+    [:input.math {:type "text" :member-name "a" :value a}] [:span.math " + "]
+    [:input.math {:type "text" :member-name "b" :value b}] [:br]
     [:input.action {:type "submit" :value "add"}]]))
 
 (defn view-output [a b sum]

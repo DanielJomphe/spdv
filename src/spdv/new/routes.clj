@@ -10,52 +10,66 @@
         ring.util.response)
   (:require [compojure.route    :as c-route]
             [compojure.handler  :as c-handler]
-            [compojure.response :as c-response])
-  (:import spdv.MacAddress))
-
-(defcrud defcrudop get-map "instances")
+            [compojure.response :as c-response]))
 
 (comment
-  (def instance-hz (instance (config))))
+  (def hz-instance (instance (config))))
 
-(def cluster-local-member (get-local-member))
+;;; Instance & Member: two angles of the same thing
+(def hz-instance  (get-default-hz-instance)) ;auto-startup happens here
+(def hz-member    (get-local-member))
 
-(defn make-id [& full]
-  (let [mac  (MacAddress/get)
-        host (get-host cluster-local-member)
-        port (get-port cluster-local-member)]
-    (str (if full mac  (last (.split mac "-")))    "["
-         (if full host (last (.split host "[.]"))) ":"
-         port                                      "]")))
+;;; This CRUD is to be used as an history of current and previous
+;;; hz-instances, along with their attached data (see below).
+(defcrud defcrudop get-map "instances")
 
-(def instance-id (make-id :full))
+;;; The current hz-instance
+(def instance-id (make-id hz-member :full))
 
-(defn instance-config []
+(defn instance-data []
   (instances-get instance-id))
 
-(defn instance-config-set! [v]
+(defn instance-data-set! [v]
   (instances-put instance-id v))
 
-(instance-config-set! {:id   instance-id
-                       :name (make-id)})
+;;; The current hz-instance's attached data
+(instance-data-set! {:instance-id   instance-id
+                     :instance-name (get-name hz-instance)
+                     :member-host   (get-host hz-member)
+                     :member-name   (make-id  hz-member)})
 
-(comment                                ;dev
-  (use 'spdv.new.routes)
-  (use 'ring.util.serve)
-  (serve app)
-  (stop-server)
-  (swank.core/break)
-  (instances-put :2 {:id "id2" :name "name2"})
-  (do (doseq [s (instances-list)] (println s)) (println "=============="))
-  (-> (eval-any '(+ 1 1)) (.get)))
-
+;;; The structured history of past and current hz-instances' attached data
 (defn instances-data []
-  (let [xs         (sort-by #(:name %) (instances-list))
-        name-discr #(= (:name %) ((instance-config) :name))]
+  "Builds a structured map of attached data of the hz-instances,
+   out of the app's persistent memory.
+   For now, this thing contains no optimizations whatsoever."
+  (let [xs         (sort-by #(:member-name %)
+                            (instances-list))
+        name-discr #(= (:member-name %)
+                       ((instance-data) :member-name))]
     {:self   (first
               (filter name-discr xs))
      :others  (filter #(not (name-discr %)) xs)}))
 
+;;; Dev utilities
+(comment
+  (use 'spdv.new.routes)
+  (use 'ring.util.serve)
+  (serve app)
+  (instances-put "instance-id" {:instance-id   "instance-id"
+                                :instance-name "instance-name"
+                                :member-host   "member-host"
+                                :member-name   "member-name"})
+  (use 'clojure.pprint)
+  (defn pr-line [] (println "=============="))
+  (do (pr-line) (pprint (instance-data)))
+  (do (pr-line) (pprint (instances-data)))
+  (do (pr-line) (doseq [s (instances-list)] (pprint s)))
+  (stop-server)
+  (swank.core/break)
+  (-> (eval-any '(+ 1 1)) (.get)))
+
+;;; UI controller
 (defroutes main-routes
   (context "/" []
            (GET  "/" []
@@ -66,9 +80,9 @@
                 (when-not (or
                            (= new-name cur-name)
                            (.isEmpty (.trim new-name)))
-                  (instance-config-set!
-                   (merge (instance-config)
-                          {:name (.trim new-name)})))
+                  (instance-data-set!
+                   (merge (instance-data)
+                          {:member-name (.trim new-name)})))
                 (view-global-status (instances-data))))
   (context "/adder" []
            (GET  "/" [] (view-input))
@@ -88,12 +102,14 @@
     (ANY "/*" [_]
          (redirect "/"))))
 
+;;; Server utilities
 (def production?
   (= "production" (get (System/getenv) "APP_ENV")))
 
 (def development?
   (not production?))
 
+;;; Server configuration
 (def app
   (-> (c-handler/site main-routes)
       wrap-lint
