@@ -32,6 +32,10 @@
 (defn instance-data-set! [v]
   (instances-put instance-id v))
 
+(defn instance-data-merge! [v]
+  (instance-data-set!
+   (merge (instance-data) v)))
+
 ;;; The current hz-instance's attached data
 (instance-data-set! {:instance-id   instance-id
                      :instance-name (get-name hz-instance)
@@ -71,18 +75,14 @@
 
 ;;; UI controller
 (defroutes main-routes
-  (context "/" []
-           (GET  "/" []
-                 (view-global-status (instances-data)))
-           (GET  "/" [name]
-                 (view-global-status (instances-data)))
+  (context "/status" []
+           (GET "/"    [] (view-global-status (instances-data)))
+           (GET "/api" [] (instances-data))
            (PUT "/" [cur-name new-name]
                 (when-not (or
                            (= new-name cur-name)
                            (.isEmpty (.trim new-name)))
-                  (instance-data-set!
-                   (merge (instance-data)
-                          {:member-name (.trim new-name)})))
+                  (instance-data-merge! {:member-name (.trim new-name)}))
                 (view-global-status (instances-data))))
   (context "/closure-server" []
            (GET "/" [] (hello-server)))
