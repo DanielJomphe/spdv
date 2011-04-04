@@ -8,7 +8,7 @@
    [:head
     [:title "SPDV"]
     (include-js  "/js/soyutils.js")
-    (include-js  "/js/closure_templates_1.js")
+    (include-js  "/js/generated/closure_templates_1.js")
     (include-css "/css/style.css")]
    [:body content]))
 
