@@ -11,16 +11,24 @@
                  [ring/ring-devel         "0.3.7"]
                  [ring/ring-jetty-adapter "0.3.7"]
                  [lobos "0.7.0-SNAPSHOT"]
-                 [clojureql "1.0.0"]
-                 [com.h2database/h2 "1.3.153"]]
-  :dev-dependencies [[swank-clojure               "1.2.1"]
+                 [clojureql "1.0.1"]
+                 [com.h2database/h2 "1.3.153"]
+                 [robert/hooke "1.1.0"]]
+  :dev-dependencies [[swank-clojure "1.3.0"]
                      [lein-ring "0.4.0"]
+                     [lein-retest "1.0.1"]
+                     [lein-difftest "1.3.1"]
+                     [lein-play "1.0.0-SNAPSHOT"]
                      [ring-serve "0.1.0"]
-                   ;;[marginalia "0.5.0"]
-                     ]
+                     [lein-namespace-depends "0.1.0-SNAPSHOT"]
+                     [lein-diagnostics "0.0.1"]
+                     [lein-search "0.3.4"]
+                     [lein-notes "0.0.1"]]
   :disable-implicit-clean true
-  ;;:aot [apparatus.eval]
-  ;;:main apparatus.main
+;;:aot [apparatus.eval]
+;;:main apparatus.main
   :ring {:handler spdv.new.routes/app}
   :javac-options {:destdir "classes/"}
-  :java-source-path "src/main/java")
+  :java-source-path "src/main/java"
+  :hooks [leiningen.hooks.retest
+          leiningen.hooks.difftest])
