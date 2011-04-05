@@ -29,7 +29,7 @@
                                "memberName" (o :member-name)}) nil))])))
 
 (comment ;for reference until I implement new forms hiccup-wise
-         (form-to [:put "/"]
+         (form-to [:put "/status"]
                 (label        :new-name
                               (str (s :instance-id) " "
                                    (s :member-host) " "))
@@ -37,6 +37,7 @@
                 (hidden-field :cur-name (s :member-name))
                 (submit-button "Changer le nom")))
 
+;;; Deprecated learning stuff to be removed soon
 (defn hello-server []
   (str "<h2>closure templates on the server side</h2>"
        (.render tofu-ns ".helloName"

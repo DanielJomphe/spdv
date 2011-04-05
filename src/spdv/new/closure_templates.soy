@@ -8,7 +8,7 @@
  */
 {template .statusInstanceSelf}
 <instance class="self">
-  <form action="/" method="POST">
+  <form action="/status" method="POST">
     <input id="_method" name="_method" type="hidden" value="PUT">
     <label for="new-name">{$instanceId} {$memberHost}</label>
     <input  id="new-name" name="new-name" type="text"   value="{$memberName}">
