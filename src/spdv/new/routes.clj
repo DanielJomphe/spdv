@@ -6,11 +6,12 @@
         [apparatus config cluster]
         [hiccup.middleware :only (wrap-base-url)]
         ring.handler.dump
-        [ring.middleware file file-info lint reload stacktrace]
+        [ring.middleware file file-info json-params lint reload stacktrace]
         ring.util.response)
   (:require [compojure.route    :as c-route]
             [compojure.handler  :as c-handler]
-            [compojure.response :as c-response]))
+            [compojure.response :as c-response]
+            [clj-json.core      :as json]))
 
 (comment
   (def hz-instance (instance (config))))
@@ -73,13 +74,19 @@
   (swank.core/break)
   (-> (eval-any '(+ 1 1)) (.get)))
 
+;;; JSON
+(defn json-response [data & [status]]
+  {:status  (or status 200)
+   :headers {"Content-Type" "application/json"}
+   :body    (json/generate-string data)})
+
 ;;; UI controller
 (defroutes main-routes
   (context "/" []
            (GET "/" [] "<a href='status'>status</a>"))
   (context "/status" []
            (GET "/"    [] (view-global-status (instances-data)))
-           (GET "/api" [] (instances-data))
+           (GET "/api" [] (json-response (instances-data)))
            (PUT "/" [cur-name new-name]
                 (when-not (or
                            (= new-name cur-name)
@@ -106,6 +113,8 @@
 ;;; Server configuration
 (def app
   (-> (c-handler/site main-routes)
+      wrap-lint
+      (wrap-json-params)
       wrap-lint
       ;;handle-dump
       ;;wrap-lint

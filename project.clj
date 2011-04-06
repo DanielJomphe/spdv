@@ -10,6 +10,8 @@
                  [ring/ring-core          "0.3.7"]
                  [ring/ring-devel         "0.3.7"]
                  [ring/ring-jetty-adapter "0.3.7"]
+                 [ring-json-params "0.1.3"]
+                 [clj-json "0.3.2"]
                  [lobos "0.7.0-SNAPSHOT"]
                  [clojureql "1.0.1"]
                  [com.h2database/h2 "1.3.153"]
