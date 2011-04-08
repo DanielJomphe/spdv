@@ -61,10 +61,16 @@
   (use 'spdv.new.routes)
   (use 'ring.util.serve)
   (serve app)
-  (instances-put "instance-id" {:instance-id   "instance-id"
-                                :instance-name "instance-name"
-                                :member-host   "member-host"
-                                :member-name   "member-name"})
+  (instances-put "instance-id0"
+                 {:instance-id   "00-00-00-00-00-00[000.000.000.000:0000]"
+                  :instance-name "some_hazelcast_0_name"
+                  :member-host   "000.000.000.000"
+                  :member-name   "00[000:0000]"})
+  (instances-put "instance-id1"
+                 {:instance-id   "11-11-11-11-11-11[111.111.111.111:1111]"
+                  :instance-name "some_hazelcast_1_name"
+                  :member-host   "111.111.111.111"
+                  :member-name   "11[111:1111]"})
   (use 'clojure.pprint)
   (defn pr-line [] (println "=============="))
   (do (pr-line) (pprint (instance-data)))
