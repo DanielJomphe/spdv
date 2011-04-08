@@ -42,8 +42,10 @@
   (str "<h2>closure templates on the server side</h2>"
        (.render tofu-ns ".helloName"
                 (SoyMapData. {"name" "Daniel"}) nil)
+       "<hr/>"
        (.render tofu-ns ".helloName"
                 (SoyMapData. {"name" "Daniel" "greetingWord" "Bonjour"}) nil)
+       "<hr/>"
        (.render tofu-ns ".helloNames"
                 (SoyMapData. {"name" "Daniel"
                               "additionalNames" (SoyListData. ["Bob" "Cid" "Lee"])})
@@ -53,10 +55,15 @@
   (main-layout
    [:h2 "closure templates on the client side"]
    [:script {:type "text/javascript"}
-    (str "document.write(spdv.templates.helloWorld());"
-         "document.write(spdv.templates.helloName({'name':'Daniel'}));"
-         "document.write(spdv.templates.helloName({'name':'Daniel', 'greetingWord':'Bonjour'}));"
-         "document.write(spdv.templates.helloNames({'name':'Daniel', 'additionalNames':['Bob', 'Cid', 'Lee']}));")]))
+     (str "document.write(spdv.templates.helloName({'name':'Daniel'}));")]
+   [:hr]
+   [:script {:type "text/javascript"}
+     (str "document.write(spdv.templates.helloName({'name':'Daniel',
+                                            'greetingWord':'Bonjour'}));")]
+   [:hr]
+   [:script {:type "text/javascript"}
+     (str "document.write(spdv.templates.helloNames({'name':'Daniel',
+                                          'additionalNames':['Bob', 'Cid', 'Lee']}));")]))
 
 ;;; Deprecated learning stuff, but for now, let's keep some for the unit tests.
 (defn parse-input [a b]
