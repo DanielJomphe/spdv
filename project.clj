@@ -26,7 +26,8 @@
                      [lein-diagnostics "0.0.1"]
                      [lein-search "0.3.4"]
                      [lein-notes "0.0.1"]
-                     [marginalia "0.5.0"]]
+                   ;;[marginalia "0.5.0"]
+                     ]
   :disable-implicit-clean true
 ;;:aot [apparatus.eval]
 ;;:main apparatus.main
