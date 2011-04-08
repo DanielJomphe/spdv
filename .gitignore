@@ -9,3 +9,4 @@ classes
 jdbc:h2:*
 generated/
 .lein-failures
+docs/uberdoc.html

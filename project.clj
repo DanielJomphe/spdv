@@ -25,7 +25,8 @@
                      [lein-namespace-depends "0.1.0-SNAPSHOT"]
                      [lein-diagnostics "0.0.1"]
                      [lein-search "0.3.4"]
-                     [lein-notes "0.0.1"]]
+                     [lein-notes "0.0.1"]
+                     [marginalia "0.5.0"]]
   :disable-implicit-clean true
 ;;:aot [apparatus.eval]
 ;;:main apparatus.main
