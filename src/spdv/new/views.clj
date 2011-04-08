@@ -41,15 +41,13 @@
 (defn hello-server []
   (str "<h2>closure templates on the server side</h2>"
        (.render tofu-ns ".helloName"
-                (SoyMapData. {"name" "Daniel"}) nil)
+                {"name" "Daniel"} nil)
        "<hr/>"
-       (.render tofu-ns ".helloName"
-                (SoyMapData. {"name" "Daniel" "greetingWord" "Bonjour"}) nil)
+       (.render tofu-ns ".helloName" {"name"         "Daniel",
+                                      "greetingWord" "Bonjour"} nil)
        "<hr/>"
-       (.render tofu-ns ".helloNames"
-                (SoyMapData. {"name" "Daniel"
-                              "additionalNames" (SoyListData. ["Bob" "Cid" "Lee"])})
-                nil)))
+       (.render tofu-ns ".helloNames" {"name"            "Daniel",
+                                       "additionalNames" ["Bob" "Cid"]} nil)))
 
 (defn hello-client []
   (main-layout
@@ -63,7 +61,7 @@
    [:hr]
    [:script {:type "text/javascript"}
      (str "document.write(spdv.templates.helloNames({'name':'Daniel',
-                                          'additionalNames':['Bob', 'Cid', 'Lee']}));")]))
+                                          'additionalNames':['Bob', 'Cid']}));")]))
 
 ;;; Deprecated learning stuff, but for now, let's keep some for the unit tests.
 (defn parse-input [a b]
