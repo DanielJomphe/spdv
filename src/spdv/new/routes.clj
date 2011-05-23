@@ -18,7 +18,7 @@
 
 ;;; Instance & Member: two angles of the same thing
 (def hz-instance  (get-default-hz-instance)) ;auto-startup happens here
-(def hz-member    (get-local-member))
+(def hz-member    (get-member-local))
 
 ;;; This CRUD is to be used as an history of current and previous
 ;;; hz-instances, along with their attached data (see below).
@@ -41,7 +41,15 @@
 (instance-data-set! {:instance-id   instance-id
                      :instance-name (get-name hz-instance)
                      :member-host   (get-host hz-member)
-                     :member-name   (make-id  hz-member)})
+                     :member-name   (make-id  hz-member)
+                     :state         "ACTIVE"})
+
+;;; Hookup into the LifecycleService
+(add-lifecycle-listener
+ (get-lifecycle-service hz-instance)
+ #(if (= LifecycleEvent$LifecycleState/STARTED %)
+    (instance-data-merge! {:state "ACTIVE"})
+    (instance-data-merge! {:state "INACTIVE"})))
 
 ;;; The structured history of past and current hz-instances' attached data
 (defn instances-data []
@@ -59,8 +67,16 @@
 ;;; Dev utilities
 (comment
   (use 'spdv.new.routes)
-  (use 'ring.util.serve)
-  (serve app)
+  (use 'clojure.pprint)
+  (defn pr-line [] (println "=============="))
+  (add-lifecycle-listener
+   (get-lifecycle-service ins-0)
+   #(do (pr-line) (println (str "!!! Instance state changed in the cluster: " %))))
+  (add-membership-listener
+   #(do (pr-line) (println (str "!!! Member added to the cluster: " %)))
+   #(do (pr-line) (println (str "!!! Member removed from the cluster: " %))))
+  (def               ins-0 (instance (config)))
+  (shutdown-instance ins-0)
   (instances-put "instance-id0"
                  {:instance-id   "00-00-00-00-00-00[000.000.000.000:0000]"
                   :instance-name "some_hazelcast_0_name"
@@ -71,14 +87,19 @@
                   :instance-name "some_hazelcast_1_name"
                   :member-host   "111.111.111.111"
                   :member-name   "11[111:1111]"})
-  (use 'clojure.pprint)
-  (defn pr-line [] (println "=============="))
   (do (pr-line) (pprint (instance-data)))
   (do (pr-line) (pprint (instances-data)))
   (do (pr-line) (doseq [s (instances-list)] (pprint s)))
+  (do (pr-line) (doseq [s (get-members)] (pprint s)))
+  (use 'ring.util.serve)
+  (serve app)
   (stop-server)
   (swank.core/break)
-  (-> (eval-any '(+ 1 1)) (.get)))
+  (-> (eval-any '(+ 1 1)) (.get))
+  (defn shred-user []
+    (doseq [s (filter (complement #{'shred-user}) (map first (ns-interns 'user)))]
+      (ns-unmap 'user s)))
+  (shred-user))
 
 ;;; JSON
 (defn json-response [data & [status]]

@@ -1,36 +1,67 @@
 (ns spdv.new.apparatus
   (:use [apparatus config cluster])
   (:import [spdv MacAddress]
-           [com.hazelcast.core  Hazelcast]
+           [com.hazelcast.core
+            Hazelcast
+            LifecycleService LifecycleListener LifecycleEvent
+            MembershipEvent MembershipListener]
            [com.hazelcast.query Predicate]))
 
 ;;; Hazelcast Core: HazelcastInstance
 (defn get-default-hz-instance []
   "Sometimes, a default instance is good enough.
-   Has the side effect of starting an instance if none exists yet."
+   Side effect: starts an instance if none exists yet."
   (Hazelcast/getDefaultInstance))
 
 (defn get-name [hz-instance]
   (.getName hz-instance))
 
-;;; Hazelcast Core: Cluster & Member
+;;; lifecycle
+(defn get-lifecycle-service
+  ([]            (-> (Hazelcast/getLifecycleService)))
+  ([hz-instance] (-> hz-instance (.getLifecycleService))))
+
+(defn add-lifecycle-listener [lifecycle-service on-event]
+  (.addLifecycleListener
+   lifecycle-service
+   (reify LifecycleListener
+     (^void stateChanged [_ ^LifecycleEvent e]
+       (let [state (.getState e)]
+         (on-event state))))))
+
+(defn shutdown-instance [hz-instance]
+  (.shutdown (get-lifecycle-service hz-instance)))
+
+;;; Hazelcast Core: Cluster
 (defn get-cluster []
+  "Side effect: starts an instance if none exists yet."
   (Hazelcast/getCluster))
 
-(defn get-local-member []
-  "Has the side effect of starting an instance if none exists yet."
+(defn get-member-local []
+  "Side effect: starts an instance if none exists yet."
   (-> (get-cluster) (.getLocalMember)))
 
 (defn get-members []
-  "Has the side effect of starting an instance if none exists yet."
+  "Side effect: starts an instance if none exists yet."
   (-> (get-cluster) (.getMembers)))
 
+(defn add-membership-listener [on-member-added
+                               on-member-removed]
+  (-> (get-cluster)
+      (.addMembershipListener
+       (reify MembershipListener
+         (^void memberAdded   [_ ^MembershipEvent e] (on-member-added   e))
+         (^void memberRemoved [_ ^MembershipEvent e] (on-member-removed e))))))
+
+;;; Hazelcast Core: Member
 (defn get-host [member]
   (-> member (.getInetSocketAddress) (.getAddress) (.getHostAddress)))
 
 (defn get-port [member]
   (str (-> member (.getInetSocketAddress) (.getPort))))
 
+;;; Utility. Not sure I shouldn't instead use Hazelcast/getIdGenerator
+;;; but I would prefer to have instance ids that mean something to me.
 (defn make-id [member & full]
   (let [mac  (MacAddress/get)
         host (get-host member)
@@ -38,6 +69,9 @@
     (str (if full mac  (last (.split mac "-")))    "["
          (if full host (last (.split host "[.]"))) ":"
          port                                      "]")))
+
+(defn make-id-generated []
+  (-> (Hazelcast/getIdGenerator "hz-instance-ids") (.newId)))
 
 ;;; Hazelcast Query: Predicate
 (def pred-all
