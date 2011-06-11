@@ -64,21 +64,23 @@
                        ((instance-data) :member-name))]
     {:self   (first
               (filter name-discr xs))
-     :others  (filter #(not (name-discr %)) xs)}))
+     :others  (remove name-discr xs)}))
 
 ;;; Dev utilities
 (comment
   (use 'spdv.new.routes)
   (use 'clojure.pprint)
   (defn pr-line [] (println "=============="))
+  (def               ins-0 (instance (config)))
+  (def               ins-1 (instance (config)))
   (add-lifecycle-listener
    (get-lifecycle-service ins-0)
    #(do (pr-line) (println (str "!!! Instance state changed in the cluster: " %))))
   (add-membership-listener
    #(do (pr-line) (println (str "!!! Member added to the cluster: " %)))
    #(do (pr-line) (println (str "!!! Member removed from the cluster: " %))))
-  (def               ins-0 (instance (config)))
   (shutdown-instance ins-0)
+  (shutdown-instance ins-1)
   (instances-put "instance-id0"
                  {:instance-id   "00-00-00-00-00-00[000.000.000.000:0000]"
                   :instance-name "some_hazelcast_0_name"
