@@ -16,26 +16,26 @@
     (include-css "/css/html5reset-1.6.1.css")
     (include-css "/css/style.css")]
    [:body
+    [:header ""]
     content
-    [:footer "Footer"]]))
+    [:footer ""]]))
 
 (defn view-global-status [data]
-  (main-layout
-   [:section
-    [:header
-     [:h1 "État global du système"]]
-    [:div#instance 
-     (let [os (data :others)
-           s  (data :self)]
-       (.render tofu "spdv.templates.statusInstanceSelf"
-                (SoyMapData. {"instanceId" (s :instance-id)
-                              "memberHost" (s :member-host)
-                              "memberName" (s :member-name)}) nil)
-       (for [o os]
-         (.render tofu "spdv.templates.statusInstanceOther"
-                  (SoyMapData. {"instanceId" (o :instance-id)
-                                "memberHost" (o :member-host)
-                                "memberName" (o :member-name)}) nil)))]]))
+  (let [os (data :others)
+            s  (data :self)]
+       (main-layout
+        [:section#instances
+         [:header
+          [:h1 "État global du système"]] 
+         (.render tofu "spdv.templates.statusInstanceSelf"
+                  (SoyMapData. {"instanceId" (s :instance-id)
+                                "memberHost" (s :member-host)
+                                "memberName" (s :member-name)}) nil)
+         (for [o os]
+           (.render tofu "spdv.templates.statusInstanceOther"
+                    (SoyMapData. {"instanceId" (o :instance-id)
+                                  "memberHost" (o :member-host)
+                                  "memberName" (o :member-name)}) nil))])))
 
 (comment        ;for reference until I implement new forms hiccup-wise
   (form-to [:put "/status"]
