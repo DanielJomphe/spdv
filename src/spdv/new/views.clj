@@ -9,24 +9,25 @@
     [:title "SPDV"]
     (include-js  "/js/soyutils.js")
     (include-js  "/js/generated/closure_templates_1.js")
+    (include-js  "/js/modernizr-2.0.4.js")
     (include-css "/css/style.css")]
    [:body content]))
 
 (defn view-global-status [data]
-  (let [os (data :others)
-        s  (data :self)]
-    (main-layout
+  (main-layout
      [:h2 "État global du système"]
-     [:instances
-      (.render tofu "spdv.templates.statusInstanceSelf"
-               (SoyMapData. {"instanceId" (s :instance-id)
-                             "memberHost" (s :member-host)
-                             "memberName" (s :member-name)}) nil)
-      (for [o os]
-        (.render tofu "spdv.templates.statusInstanceOther"
-                 (SoyMapData. {"instanceId" (o :instance-id)
-                               "memberHost" (o :member-host)
-                               "memberName" (o :member-name)}) nil))])))
+     [:div#instances 
+      (let [os (data :others)
+            s  (data :self)]
+        (.render tofu "spdv.templates.statusInstanceSelf"
+                 (SoyMapData. {"instanceId" (s :instance-id)
+                               "memberHost" (s :member-host)
+                               "memberName" (s :member-name)}) nil)
+        (for [o os]
+          (.render tofu "spdv.templates.statusInstanceOther"
+                   (SoyMapData. {"instanceId" (o :instance-id)
+                                 "memberHost" (o :member-host)
+                                 "memberName" (o :member-name)}) nil)))]))
 
 (comment ;for reference until I implement new forms hiccup-wise
          (form-to [:put "/status"]
