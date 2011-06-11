@@ -8,6 +8,8 @@
         ring.handler.dump
         [ring.middleware file file-info json-params lint reload stacktrace]
         ring.util.response)
+  (:import [com.hazelcast.core
+            LifecycleEvent$LifecycleState])
   (:require [compojure.route    :as c-route]
             [compojure.handler  :as c-handler]
             [compojure.response :as c-response]
