@@ -87,15 +87,15 @@
   `(defn ~(make-symbol name op) [~@bindings]
      (-> ~hz-ds ~@forms)))
 
-(defmacro make-crudop [& rest]
-  "This macro depends on its local context to provide all vars it references except 'rest'."
+(defmacro make-crudop! [& rest]
+  "This macro intentionally captures a few symbols from its lexical context."
   `(defcrudop (~'ap-ds-getter ~'name) ~'name ~@rest))
 
 (defmacro defcrud [ap-ds-getter name]
-  `(do ~(make-crudop "put"    [k# v#] (.put    k# v#))
-       ~(make-crudop "list"   [     ] (.values      ))
-       ~(make-crudop "get"    [k#   ] (.get    k#   ))
-       ~(make-crudop "delete" [k#   ] (.remove k#   ))))
+  `(do ~(make-crudop! "put"    [k# v#] (.put    k# v#))
+       ~(make-crudop! "list"   [     ] (.values      ))
+       ~(make-crudop! "get"    [k#   ] (.get    k#   ))
+       ~(make-crudop! "delete" [k#   ] (.remove k#   ))))
 
 (comment
   (defn macprint [form]
