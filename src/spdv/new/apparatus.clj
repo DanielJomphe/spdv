@@ -87,9 +87,9 @@
   `(defn ~(make-symbol name op) [~@bindings]
      (-> ~hz-ds ~@forms)))
 
-(defmacro make-crudop! [& rest]
-  "This macro intentionally captures a few symbols from its lexical context."
-  `(defcrudop (~'ap-ds-getter ~'name) ~'name ~@rest))
+(defmacro make-crudop! [op bindings & forms]
+  "This macro intentionally captures 2 symbols from its lexical context."
+  `(defcrudop (~'ap-ds-getter ~'name) ~'name ~op ~bindings ~@forms))
 
 (defmacro defcrud [ap-ds-getter name]
   `(do ~(make-crudop! "put"    [k# v#] (.put    k# v#))

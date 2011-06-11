@@ -24,7 +24,7 @@
 
 ;;; This CRUD is to be used as an history of current and previous
 ;;; hz-instances, along with their attached data (see below).
-(defcrud defcrudop get-map "instances")
+(defcrud get-map "instances")
 
 ;;; The current hz-instance
 (def instance-id (make-id hz-member :full))
