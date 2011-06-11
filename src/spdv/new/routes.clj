@@ -114,7 +114,7 @@
 ;;; UI controller
 (defroutes main-routes
   (context "/" []
-           (GET "/" [] "<a href='status'>status</a>"))
+           (GET "/" [] "<nav><ul><li><a href='status'>status</a></li></ul></nav>"))
   (context "/status" []
            (GET "/"    [] (view-global-status (instances-data)))
            (GET "/api" [] (json-response (instances-data)))

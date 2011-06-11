@@ -7,26 +7,26 @@
  * @param memberName The name of the member.
  */
 {template .statusInstanceSelf}
-<instance class="self">
+<section class="self">
   <form action="/status" method="POST">
     <input id="_method" name="_method" type="hidden" value="PUT">
     <label for="new-name">{$instanceId} {$memberHost}</label>
     <input  id="new-name" name="new-name" type="text"   value="{$memberName}">
     <input  id="cur-name" name="cur-name" type="hidden" value="{$memberName}">
     <input type="submit" value="Changer le nom"></form>
-</instance>
+</section>
 {/template} 
 
 /**
- * Displays an instance's status (for other instances).
- * @param instanceId The id of the instance.
+ * Displays an section's status (for other sections).
+ * @param instanceId The id of the section.
  * @param memberHost The host of the member.
  * @param memberName The name of the member.
  */
 {template .statusInstanceOther}
-<instance class="other">
+<section class="other">
   {$instanceId} {$memberHost} {$memberName}
-</instance>
+</section>
 {/template}
 
 /**

@@ -5,38 +5,46 @@
 
 (defn main-layout [& content]
   (html5
+   {:lang "fr"}
    [:head
+    [:meta {:charset "utf-8"}] ;TODO make sure server and ring middleware don't override this, especially on Windows. If present in HTTP headers, the value should be exactly 'Content-Type: text/html; charset="utf-8"'
     [:title "SPDV"]
     (include-js  "/js/soyutils.js")
     (include-js  "/js/generated/closure_templates_1.js")
     (include-js  "/js/modernizr-2.0.4.js")
+    (include-js  "/js/html5.js")        ;won't probably need this one but anyway for now
+    (include-css "/css/html5reset-1.6.1.css")
     (include-css "/css/style.css")]
-   [:body content]))
+   [:body
+    content
+    [:footer "Footer"]]))
 
 (defn view-global-status [data]
   (main-layout
-     [:h2 "État global du système"]
-     [:div#instances 
-      (let [os (data :others)
-            s  (data :self)]
-        (.render tofu "spdv.templates.statusInstanceSelf"
-                 (SoyMapData. {"instanceId" (s :instance-id)
-                               "memberHost" (s :member-host)
-                               "memberName" (s :member-name)}) nil)
-        (for [o os]
-          (.render tofu "spdv.templates.statusInstanceOther"
-                   (SoyMapData. {"instanceId" (o :instance-id)
-                                 "memberHost" (o :member-host)
-                                 "memberName" (o :member-name)}) nil)))]))
+   [:section
+    [:header
+     [:h1 "État global du système"]]
+    [:div#instance 
+     (let [os (data :others)
+           s  (data :self)]
+       (.render tofu "spdv.templates.statusInstanceSelf"
+                (SoyMapData. {"instanceId" (s :instance-id)
+                              "memberHost" (s :member-host)
+                              "memberName" (s :member-name)}) nil)
+       (for [o os]
+         (.render tofu "spdv.templates.statusInstanceOther"
+                  (SoyMapData. {"instanceId" (o :instance-id)
+                                "memberHost" (o :member-host)
+                                "memberName" (o :member-name)}) nil)))]]))
 
-(comment ;for reference until I implement new forms hiccup-wise
-         (form-to [:put "/status"]
-                (label        :new-name
-                              (str (s :instance-id) " "
-                                   (s :member-host) " "))
-                (text-field   :new-name (s :member-name))
-                (hidden-field :cur-name (s :member-name))
-                (submit-button "Changer le nom")))
+(comment        ;for reference until I implement new forms hiccup-wise
+  (form-to [:put "/status"]
+           (label        :new-name
+                         (str (s :instance-id) " "
+                              (s :member-host) " "))
+           (text-field   :new-name (s :member-name))
+           (hidden-field :cur-name (s :member-name))
+           (submit-button "Changer le nom")))
 
 ;;; Deprecated learning stuff to be removed soon
 (defn hello-server []
@@ -52,16 +60,18 @@
 
 (defn hello-client []
   (main-layout
-   [:h2 "closure templates on the client side"]
-   [:script {:type "text/javascript"}
-     (str "document.write(spdv.templates.helloName({'name':'Daniel'}));")]
+   [:section
+    [:header
+     [:h1 "closure templates on the client side"]]
+    [:script {:type "text/javascript"}
+     (str "document.write(spdv.templates.helloName({'name':'Daniel'}));")]]
    [:hr]
    [:script {:type "text/javascript"}
-     (str "document.write(spdv.templates.helloName({'name':'Daniel',
+    (str "document.write(spdv.templates.helloName({'name':'Daniel',
                                             'greetingWord':'Bonjour'}));")]
    [:hr]
    [:script {:type "text/javascript"}
-     (str "document.write(spdv.templates.helloNames({'name':'Daniel',
+    (str "document.write(spdv.templates.helloNames({'name':'Daniel',
                                           'additionalNames':['Bob', 'Cid']}));")]))
 
 ;;; Deprecated learning stuff, but for now, let's keep some for the unit tests.
