@@ -114,16 +114,16 @@
 ;;; UI controller
 (defroutes main-routes
   (context "/" []
-           (GET "/" [] "<nav><ul><li><a href='status'>status</a></li></ul></nav>"))
+           (GET "/" [] (view-index)))
   (context "/status" []
-           (GET "/"    [] (view-global-status (instances-data)))
+           (GET "/"    [] (view-status (instances-data)))
            (GET "/api" [] (json-response (instances-data)))
            (PUT "/" [cur-name new-name]
                 (when-not (or
                            (= new-name cur-name)
                            (.isEmpty (.trim new-name)))
                   (instance-data-merge! {:member-name (.trim new-name)}))
-                (view-global-status (instances-data))))
+                (view-status (instances-data))))
   (context "/closure-server" []
            (GET "/" [] (hello-server)))
   (context "/closure-client" []
