@@ -10,9 +10,9 @@
         ring.util.response)
   (:import [com.hazelcast.core
             LifecycleEvent$LifecycleState])
-  (:require [compojure.route    :as c-route]
-            [compojure.handler  :as c-handler]
-            [compojure.response :as c-response]
+  (:require [compojure.route    :as route]
+            [compojure.handler  :as handler]
+            [compojure.response :as response]
             [clj-json.core      :as json]))
 
 (comment
@@ -128,8 +128,8 @@
            (GET "/" [] (hello-server)))
   (context "/closure-client" []
            (GET "/" [] (hello-client)))
-  (c-route/resources "/")
-  (c-route/not-found "Page not found")
+  (route/resources "/")
+  (route/not-found "Page not found")
   (comment
     (ANY "/*" [_]
          (redirect "/"))))
@@ -143,7 +143,7 @@
 
 ;;; Server configuration
 (def app
-  (-> (c-handler/site main-routes)
+  (-> (handler/site main-routes)
       wrap-lint
       (wrap-json-params)
       wrap-lint
