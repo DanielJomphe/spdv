@@ -38,6 +38,14 @@
     [:header [:h1 "Index"]
      (menu-index)]]))
 
+(defn rewrite-for-js-var-name [k]
+  (if (keyword? k)
+    (name k)
+    (str k)))
+
+(defn toSoyMapData [m]
+  (map #(SoyMapData. %) ))
+
 (defn view-status [data]
   (let [os (data :others)
         s  (data :self)]
