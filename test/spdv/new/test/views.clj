@@ -20,5 +20,3 @@
                                       :member-name   "member-name-other"})})]
     (is (re-find #"instance-id-other" html))))
 
-(deftest rewrite-for-js-var-name-works
-  (is (= "isRewritten" (rewrite-for-js-var-name :is-rewritten))))
