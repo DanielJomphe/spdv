@@ -87,15 +87,11 @@
   `(defn ~(make-symbol name op) [~@bindings]
      (-> ~hz-ds ~@forms)))
 
-(defmacro make-crudop! [op bindings & forms]
-  "This macro intentionally captures 2 symbols from its lexical context."
-  `(defcrudop (~'ap-ds-getter ~'name) ~'name ~op ~bindings ~@forms))
-
 (defmacro defcrud [ap-ds-getter name]
-  `(do ~(make-crudop! "put"    [k# v#] (.put    k# v#))
-       ~(make-crudop! "list"   [     ] (.values      ))
-       ~(make-crudop! "get"    [k#   ] (.get    k#   ))
-       ~(make-crudop! "delete" [k#   ] (.remove k#   ))))
+  `(do (defcrudop (~ap-ds-getter ~name) ~name "put"    [k# v#] (.put    k# v#))
+       (defcrudop (~ap-ds-getter ~name) ~name "list"   [     ] (.values      ))
+       (defcrudop (~ap-ds-getter ~name) ~name "get"    [k#   ] (.get    k#   ))
+       (defcrudop (~ap-ds-getter ~name) ~name "delete" [k#   ] (.remove k#   ))))
 
 (comment
   (defn macprint [form]
@@ -105,14 +101,12 @@
       (pprint (macroexpand-1 form))))
 
   (macprint '(defcrudop (get-map "my-map") "my-map" "get" [k#] (.get k#)))
-  (macprint '(make-crudop "get" [k#] (.get k#)))
   (macprint '(defcrud get-map "my-map"))
 
   (comment --> (defn my-map-get [k#]
                  (-> (get-map "my-map") (.get k#)))
-           --> (defcrudop (get-map "my-map") "my-map" "get" [k#] (.get k#))
            --> (do ...
-                   (make-crudop "get" [k#] (.get k#))
+                   (defcrudop (ap-ds-getter name) name "get" [k#] (.get k#))
                    ...))
 
   (defcrud get-map "blah")
