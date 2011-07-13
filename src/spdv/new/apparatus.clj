@@ -94,23 +94,13 @@
        (defcrudop (~ap-ds-getter ~name) ~name "delete" [k#   ] (.remove k#   ))))
 
 (comment
-  (defn macprint [form]
-    (do
-      (println "==============")
-      (use 'clojure.pprint)
-      (pprint (macroexpand-1 form))))
+  (defcrudop (get-map "my-map") "my-map" "get" [k#] (.get k#))
+  -->
+  (defn my-map-get [k#]
+    (-> (get-map "my-map") (.get k#)))
 
-  (macprint '(defcrudop (get-map "my-map") "my-map" "get" [k#] (.get k#)))
-  (macprint '(defcrud get-map "my-map"))
-
-  (comment --> (defn my-map-get [k#]
-                 (-> (get-map "my-map") (.get k#)))
-           --> (do ...
-                   (defcrudop (ap-ds-getter name) name "get" [k#] (.get k#))
-                   ...))
-
-  (defcrud get-map "blah")
-  (blah-list)
-  (blah-put :k :v)
-  (blah-get :k)
-  (blah-delete :k))
+  (defcrud get-map "my-map")
+  -->
+  (do ...
+      (defcrudop (ap-ds-getter name) name "get" [k#] (.get k#))
+      ...))

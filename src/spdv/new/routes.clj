@@ -99,7 +99,6 @@
   (serve app)
   (stop-server)
   (swank.core/break)
-  (-> (eval-any '(+ 1 1)) (.get))
   (defn shred-user []
     (doseq [s (filter (complement #{'shred-user}) (map first (ns-interns 'user)))]
       (ns-unmap 'user s)))
