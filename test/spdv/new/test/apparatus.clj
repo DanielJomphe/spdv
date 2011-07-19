@@ -63,7 +63,23 @@
 
 (deftest test-defcrud
   (with-test-temp-ns
-    (defcrud get-map "test-defcrud-map")
+    (defcrud get-map "test-defcrud-get-map")
+    (is (empty?        (test-defcrud-get-map-list)))
+    (is (= nil         (test-defcrud-get-map-get :k)))
+    (is (= nil         (test-defcrud-get-map-put :k :v)))
+    (is (not (empty?   (test-defcrud-get-map-list))))
+    (is (= :v   (first (test-defcrud-get-map-list))))
+    (is (= :v          (test-defcrud-get-map-get :k)))
+    (is (= nil         (test-defcrud-get-map-get :kkk)))
+    (is (= :v          (test-defcrud-get-map-put :k :v2)))
+    (is (= :v2         (test-defcrud-get-map-get :k)))
+    (is (= :v2         (test-defcrud-get-map-delete :k)))
+    (is (empty?        (test-defcrud-get-map-list)))
+    (is (= nil         (test-defcrud-get-map-get :k)))))
+
+(deftest test-defcrud-map
+  (with-test-temp-ns
+    (defcrud-map "test-defcrud-map")
     (is (empty?        (test-defcrud-map-list)))
     (is (= nil         (test-defcrud-map-get :k)))
     (is (= nil         (test-defcrud-map-put :k :v)))
