@@ -15,7 +15,7 @@
                  [clj-json "0.3.2"]
                  [lobos "0.7.0"]
                  [clojureql "1.0.1"]
-                 [com.h2database/h2 "1.3.155"]
+                 [com.h2database/h2 "1.3.158"]
                  [robert/hooke "1.1.2"]]
   :dev-dependencies [[slamhound "1.2.0"]
                      [ring-serve "0.1.1"]
