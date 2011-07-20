@@ -7,6 +7,7 @@
                  [apparatus "1.0.0-SNAPSHOT"]
                  [compojure "0.6.5"]
                  [hiccup "0.3.6"]
+                 [aleph "0.2.0-alpha2"]
                  [ring/ring-core          "0.3.11"]
                  [ring/ring-devel         "0.3.11"]
                  [ring/ring-jetty-adapter "0.3.11"]

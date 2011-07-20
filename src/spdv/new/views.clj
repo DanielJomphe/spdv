@@ -3,6 +3,32 @@
         spdv.new.closure-templates)
   (:import [com.google.template.soy.data SoyMapData SoyListData]))
 
+(defn status-header []
+  [:section#status
+   [:div#debug]
+   [:div#wsMessages]
+   [:script
+    (str "$(document).ready(function(){"
+         "  function debug(m){ console.debug(m); };"
+         "  var ws = new WebSocket('ws://0.0.0.0:8080');"
+         "  ws.onopen = function(e) {"
+         "    debug('Connected!');"
+         "    msg='Hello server, how are you?';"
+         "    ws.send(msg);"
+         "    debug('Handshaking with: '+msg);"
+         "  };"
+         "  ws.onmessage = function(e) {"
+         "    $('#wsMessages').append('<p>Received: '+e.data+'</p>')"
+         "  };"
+         "  ws.onclose = function(e) {"
+         "    debug('Closed!')"
+         "  };"
+         "  ws.onerror = function(e) {"
+         "    debug('ERROR!');"
+         "  };"
+         "  $(window).unload(function(){ws.close();});"
+         "});")]])
+
 (defn menu-header []
   [:nav [:ul
          [:li [:a {:href "/"} "home"]]
@@ -25,10 +51,11 @@
     (include-js  "/js/generated/closure_templates_1.js")
     (include-js  "/js/modernizr-2.0.4.js")
     (include-js  "/js/html5.js") ;won't probably need this one but anyway for now
+    (include-js  "https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
     (include-css "/css/html5reset-1.6.1.css")
     (include-css "/css/style.css")]
    [:body
-    [:header [:h1 "HEADER"] (menu-header) [:hr]]
+    [:header [:h1 "HEADER"] (status-header) (menu-header) [:hr]]
     content
     [:footer [:hr] (menu-footer) [:h1 "FOOTER"]]]))
 

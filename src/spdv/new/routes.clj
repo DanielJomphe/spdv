@@ -5,6 +5,8 @@
         spdv.new.apparatus
         [apparatus config cluster]
         [hiccup.middleware :only (wrap-base-url)]
+        [lamina.core :only (permanent-channel enqueue receive siphon map* close-connection)]
+        [aleph.http :only (start-http-server)]
         ring.handler.dump
         [ring.middleware file file-info json-params lint reload stacktrace]
         ring.util.response)
@@ -20,6 +22,21 @@
   {:status  (or status 200)
    :headers {"Content-Type" "application/json"}
    :body    (json/generate-string data)})
+
+;;; WebSockets
+(def out-ch (permanent-channel))
+
+(defn server-status-handler [ch handshake]
+  (receive ch (fn [name]
+                (siphon (map* #(str name %) ch) out-ch)
+                (siphon out-ch ch))))
+
+(start-http-server server-status-handler {:port 8080 :websocket true})
+
+(comment
+  (enqueue out-ch "yo!!!")
+  (use 'lamina.core/close-connection)
+)
 
 ;;; UI controller
 (defroutes main-routes
