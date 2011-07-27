@@ -5,7 +5,7 @@
         spdv.new.apparatus
         [apparatus config cluster]
         [hiccup.middleware :only (wrap-base-url)]
-        [lamina.core :only (permanent-channel enqueue receive siphon map* close-connection)]
+        [lamina.core :only (permanent-channel enqueue receive siphon map*)]
         [aleph.http :only (start-http-server)]
         ring.handler.dump
         [ring.middleware file file-info json-params lint reload stacktrace]
