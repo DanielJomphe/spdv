@@ -11,9 +11,11 @@
 (def tofu    (.compileToJavaObj soyfs))
 (def tofu-ns (.forNamespace tofu "spdv.templates"))
 
-(def js-opt  (doto (SoyJsSrcOptions.)))
+(def js-opt  (doto (SoyJsSrcOptions.)
+               (.setShouldGenerateJsdoc true)
+               (.setShouldProvideRequireSoyNamespaces true)))
 
-(dorun (let [files (.compileToJsSrc soyfs (SoyJsSrcOptions.) nil)]
+(dorun (let [files (.compileToJsSrc soyfs js-opt nil)]
          (for [i (range (.size files)) ]
            (spit (str "resources/public/js/generated/closure_templates_" (+ 1 i) ".js")
                  (nth files i)))))
