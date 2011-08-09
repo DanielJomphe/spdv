@@ -38,6 +38,15 @@
   (use 'lamina.core/close-connection)
 )
 
+;;; Closure compiling
+
+(defn compile-js [])
+
+(def compiled-js (memoize #({:response            compile-js
+                             :hash     (make-hash compile-js)})))
+
+;;; (str "/compiled-js/" (:hash (compiled-js)) "/scripts.js")
+
 ;;; UI controller
 (defroutes main-routes
   (context "/" []
@@ -55,6 +64,8 @@
            (GET "/" [] (hello-server)))
   (context "/closure-client" []
            (GET "/" [] (hello-client)))
+  (context "/compiled-js" []
+           (GET "/:hash/scripts.js" {} (:response (compiled-js))))
   (route/resources "/")
   (route/not-found "Page not found")
   (comment

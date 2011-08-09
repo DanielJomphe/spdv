@@ -7,7 +7,7 @@
   [:section#status
    [:div#debug]
    [:div#wsMessages]
-   [:script
+   (javascript-tag
     (str "$(document).ready(function(){"
          "  function debug(m){ console.debug(m); };"
          "  var ws = new WebSocket('ws://0.0.0.0:8080');"
@@ -27,7 +27,7 @@
          "    debug('ERROR!');"
          "  };"
          "  $(window).unload(function(){ws.close();});"
-         "});")]])
+         "});"))])
 
 (defn menu-header []
   [:nav [:ul
@@ -49,6 +49,7 @@
     [:title "SPDV"]
     (include-js  "/js/soyutils.js")
     (include-js  "/js/generated/closure_templates_1.js")
+   ;(include-js  (str "/compiled-js/" (:hash (compiled-js)) "/scripts.js"))
     (include-js  "/js/modernizr-2.0.4.js")
     (include-js  "/js/html5.js") ;won't probably need this one but anyway for now
     (include-js  "https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
@@ -108,16 +109,13 @@
   (main-layout
    [:section
     [:header [:h1 "closure templates on the client side"]]
-    [:script {:type "text/javascript"}
-     (str "document.write(spdv.templates.helloName({'name':'Daniel'}));")]
+    (javascript-tag "document.write(spdv.templates.helloName({'name':'Daniel'}));")
     [:hr]
-    [:script {:type "text/javascript"}
-     (str "document.write(spdv.templates.helloName({'name':'Daniel',
-                                            'greetingWord':'Bonjour'}));")]
+    (javascript-tag "document.write(spdv.templates.helloName({'name':'Daniel',
+                                            'greetingWord':'Bonjour'}));")
     [:hr]
-    [:script {:type "text/javascript"}
-     (str "document.write(spdv.templates.helloNames({'name':'Daniel',
-                                          'additionalNames':['Bob', 'Cid']}));")]]))
+    (javascript-tag "document.write(spdv.templates.helloNames({'name':'Daniel',
+                                          'additionalNames':['Bob', 'Cid']}));")]))
 
 ;;; Deprecated learning stuff, but for now, let's keep some for the unit tests.
 (defn parse-input [a b]
