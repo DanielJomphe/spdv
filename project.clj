@@ -1,6 +1,6 @@
 (defproject spdv "0.1.0-SNAPSHOT"
   :description "SPDV: FIXME..."
-  :dependencies [[org.clojure.contrib/core        "1.3.0-beta1"]
+  :dependencies [[org.clojure/clojure "1.3.0-beta1"]
                  ;;[org.clojure.contrib/java-utils  "1.3.0-beta1"]
                  [apparatus "1.0.0-SNAPSHOT"]
                  [noir "1.1.1-SNAPSHOT"]
@@ -18,7 +18,8 @@
                  ;;[clojureql "1.0.1"]
                  ;;[com.h2database/h2 "1.3.158"]
                  [robert/hooke "1.1.2"]]
-  :dev-dependencies [[clojure-source "1.3.0-beta1"]
+  :dev-dependencies [
+                     ;;[clojure-source "1.3.0-beta1"]
                      [slamhound "1.2.0"]
                      [ring-serve "0.1.1"]
                      [lein-ring "0.4.5"]
