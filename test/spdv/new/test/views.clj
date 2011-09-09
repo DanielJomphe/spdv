@@ -19,4 +19,3 @@
                                       :member-host   "member-host-other"
                                       :member-name   "member-name-other"})})]
     (is (re-find #"instance-id-other" html))))
-
