@@ -17,13 +17,17 @@
 
 (boot-server)
 
-;;; JSON
+;;; JSON usage is being deprecated thanks to ClojureScript's advent.
 (defn json-response [data & [status]]
   {:status  (or status 200)
    :headers {"Content-Type" "application/json"}
    :body    (json/generate-string data)})
 
 ;;; WebSockets
+;;; For simple server-sent events, see SSE, which is, FWIR, easier and
+;;; more reliable. Anyway I'm yet to make the following work.
+;;; That said, I'll probably end up wanting a persistent,
+;;; bidirectional connection anyway, so WebSockets is the way to go.
 (comment
   (def out-ch (permanent-channel))
 
@@ -39,17 +43,7 @@
   (use 'lamina.core/close-connection)
 )
 
-;;; Closure compiling
-
-(comment
-  (defn compile-js [])
-
-  (def compiled-js (memoize #({:response            compile-js
-                               :hash     (make-hash compile-js)}))))
-
-;;; (str "/compiled-js/" (:hash (compiled-js)) "/scripts.js")
-
-;;; UI controller
+;;; UI controller using Compojure is being deprecated in favor of Noir.
 (defroutes main-routes
   (context "/" []
            (GET "/" [] (view-index)))
@@ -66,22 +60,20 @@
            (GET "/" [] (hello-server)))
   (context "/closure-client" []
            (GET "/" [] (hello-client)))
-; (context "/compiled-js" []
-;          (GET "/:hash/scripts.js" {} (:response (compiled-js))))
-  (route/resources "/")
   (route/not-found "Page not found")
   (comment
     (ANY "/*" [_]
          (redirect "/"))))
 
-;;; Server utilities
+;;; Server utilities TODO unify with the rest of the config in NoirCast.
 (def production?
   (= "production" (get (System/getenv) "APP_ENV")))
 
 (def development?
   (not production?))
 
-;;; Web server configuration
+;;; Web server configuration is probably deprecated thanks to most of
+;;; Noir's defaults.
 (def app
   (-> (handler/site main-routes)
       (wrap-json-params)
@@ -91,15 +83,15 @@
       (wrap-file-info)
       (wrap-request-logging)
       (wrap-if development? wrap-reload '[spdv.new.middleware
--                                          spdv.new.closure-templates
+                                          spdv.new.closure-templates
                                           spdv.new.views])
       (wrap-bounce-favicon)
       (wrap-exception-logging)
       (wrap-if production?  wrap-failsafe)
       ))
 
-;;; TODO Create a dev/prod lifecycle that makes sense instead of the following stuff
-;;; vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+;;; TODO Temporary dev/prod lifecycle
+;;; vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 (use 'ring.util.serve)
 (defn boot-web-server []
   (serve app))

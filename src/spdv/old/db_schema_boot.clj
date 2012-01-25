@@ -7,7 +7,6 @@
          schema)
         lobos.backends.h2
         (spdv.new
-         db-manip-boot
          db-schema-defs)
         :reload))
 

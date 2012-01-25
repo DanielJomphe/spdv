@@ -35,7 +35,7 @@
          [:li [:a {:href "/status"} "status"]]]])
 
 (defn menu-index []
-  [:nav [:ul 
+  [:nav [:ul
          [:li [:a {:href "/closure-server"} "closure-server"]]
          [:li [:a {:href "/closure-client"} "closure-client"]]]])
 
@@ -49,7 +49,6 @@
     [:title "SPDV"]
     (include-js  "/js/soyutils.js")
     (include-js  "/js/generated/closure_templates_1.js")
-   ;(include-js  (str "/compiled-js/" (:hash (compiled-js)) "/scripts.js"))
     (include-js  "/js/modernizr-2.0.4.js")
     (include-js  "/js/html5.js") ;won't probably need this one but anyway for now
     (include-js  "https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
@@ -71,7 +70,7 @@
         s  (data :self)]
     (main-layout
      [:section#instances
-      [:header [:h1 "État global du système"]] 
+      [:header [:h1 "État global du système"]]
       (.render tofu "spdv.templates.statusInstanceSelf"
                (SoyMapData. {"instanceId" (s :instance-id)
                              "memberHost" (s :member-host)
