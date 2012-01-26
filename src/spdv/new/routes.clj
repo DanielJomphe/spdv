@@ -56,10 +56,6 @@
                            (.isEmpty (.trim new-name)))
                   (server-props-merge! {:member-name (.trim new-name)}))
                 (view-status (servers-props-data))))
-  (context "/closure-server" []
-           (GET "/" [] (hello-server)))
-  (context "/closure-client" []
-           (GET "/" [] (hello-client)))
   (route/not-found "Page not found")
   (comment
     (ANY "/*" [_]

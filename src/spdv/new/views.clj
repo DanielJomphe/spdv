@@ -35,15 +35,12 @@
          [:li [:a {:href "/status"} "status"]]]])
 
 (defn menu-index []
-  [:nav [:ul
-         [:li [:a {:href "/closure-server"} "closure-server"]]
-         [:li [:a {:href "/closure-client"} "closure-client"]]]])
+  [:nav [:ul]])
 
 (defn menu-footer [])
 
 (defn main-layout [& content]
-  (html5
-   {:lang "fr"}
+  (html5 {:lang "fr"}
    [:head
     [:meta {:charset "utf-8"}] ;TODO make sure server and ring middleware don't override this, especially on Windows. If present in HTTP headers, the value should be exactly 'Content-Type: text/html; charset="utf-8"'
     [:title "SPDV"]
@@ -90,32 +87,3 @@
            (hidden-field :cur-name (s :member-name))
            (submit-button "Changer le nom")))
 
-;;; Deprecated learning stuff to be removed soon
-(defn hello-server []
-  (main-layout
-   [:section
-    [:header [:h1 "closure templates on the server side"]]
-    (.render tofu-ns ".helloName"
-             {"name" "Daniel"} nil)
-    [:hr]
-    (.render tofu-ns ".helloName" {"name"         "Daniel",
-                                   "greetingWord" "Bonjour"} nil)
-    [:hr]
-    (.render tofu-ns ".helloNames" {"name"            "Daniel",
-                                    "additionalNames" ["Bob" "Cid"]} nil)]))
-
-(defn hello-client []
-  (main-layout
-   [:section
-    [:header [:h1 "closure templates on the client side"]]
-    (javascript-tag "document.write(spdv.templates.helloName({'name':'Daniel'}));")
-    [:hr]
-    (javascript-tag "document.write(spdv.templates.helloName({'name':'Daniel',
-                                            'greetingWord':'Bonjour'}));")
-    [:hr]
-    (javascript-tag "document.write(spdv.templates.helloNames({'name':'Daniel',
-                                          'additionalNames':['Bob', 'Cid']}));")]))
-
-;;; Deprecated learning stuff, but for now, let's keep some for the unit tests.
-(defn parse-input [a b]
-  [(Integer/parseInt a) (Integer/parseInt b)])
