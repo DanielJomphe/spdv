@@ -6,28 +6,7 @@
 (defn status-header []
   [:section#status
    [:div#debug]
-   [:div#wsMessages]
-   (javascript-tag
-    (str "$(document).ready(function(){"
-         "  function debug(m){ console.debug(m); };"
-         "  var ws = new WebSocket('ws://0.0.0.0:8080');"
-         "  ws.onopen = function(e) {"
-         "    debug('Connected!');"
-         "    msg='Hello server, how are you?';"
-         "    ws.send(msg);"
-         "    debug('Handshaking with: '+msg);"
-         "  };"
-         "  ws.onmessage = function(e) {"
-         "    $('#wsMessages').append('<p>Received: '+e.data+'</p>')"
-         "  };"
-         "  ws.onclose = function(e) {"
-         "    debug('Closed!')"
-         "  };"
-         "  ws.onerror = function(e) {"
-         "    debug('ERROR!');"
-         "  };"
-         "  $(window).unload(function(){ws.close();});"
-         "});"))])
+   [:div#wsMessages]])
 
 (defn menu-header []
   [:nav [:ul
