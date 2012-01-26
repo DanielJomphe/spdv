@@ -5,20 +5,13 @@
         spdv.new.apparatus
         [apparatus config cluster]
         [hiccup.middleware :only (wrap-base-url)]
-        [ring.middleware file file-info json-params lint reload stacktrace]
+        [ring.middleware file file-info lint reload stacktrace]
         ring.util.response)
   (:require [compojure.route    :as route]
             [compojure.handler  :as handler]
-            [compojure.response :as response]
-            [clj-json.core      :as json]))
+            [compojure.response :as response]))
 
 (boot-server)
-
-;;; JSON usage is being deprecated thanks to ClojureScript's advent.
-(defn json-response [data & [status]]
-  {:status  (or status 200)
-   :headers {"Content-Type" "application/json"}
-   :body    (json/generate-string data)})
 
 ;;; UI controller using Compojure is being deprecated in favor of Noir.
 (defroutes main-routes
@@ -26,7 +19,6 @@
            (GET "/" [] (view-index)))
   (context "/status" []
            (GET "/"    [] (view-status   (servers-props-data)))
-           (GET "/api" [] (json-response (servers-props-data)))
            (PUT "/" [cur-name new-name]
                 (when-not (or
                            (= new-name cur-name)
@@ -49,7 +41,6 @@
 ;;; Noir's defaults.
 (def app
   (-> (handler/site main-routes)
-      (wrap-json-params)
       (wrap-base-url)
       (wrap-utf)
       (wrap-file "resources")
